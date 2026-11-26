@@ -1,4 +1,16 @@
-# Cavaleiro — nova pose de frente
+# Cavaleiro — poses de frente
+
+## Recruta com equipamento simples
+
+![Cavaleiro recruta em 32×32, ampliado oito vezes](../../art/personagens/cavaleiro-recruta-frente.preview8x.png)
+
+[Baixar sprite 32×32](../../art/personagens/cavaleiro-recruta-frente.png) · [Abrir prévia 8×](../../art/personagens/cavaleiro-recruta-frente.preview8x.png) · [Original gerado](../../art/rascunho/cavaleiro-recruta-frente.png) · [Prompt completo](../../art/rascunho/cavaleiro-recruta-frente.prompt.md)
+
+A malha e as botas são de couro marrom, a espada é de pedra cinza lascada e a cabeça está descoberta. O escudo virou uma peça de madeira gasta com tinta vermelha.
+
+Geração nativa do OpenAI ImageGen com a vila aprovada e a versão de armadura como referências. Modelo específico não informado pela ferramenta. A prévia foi inspecionada na escala do jogo. As escamas do couro e as lascas da pedra ficam mais nítidas no original. A conversão usou a paleta da vila e passou na checagem de arte com 0 erros. Pose para avaliação, sem integração no lobby.
+
+## Versão anterior com armadura de prata
 
 Criado em 26/11/2026. Versão separada do cavaleiro anterior, aguardando aprovação de Raffel/Henrique.
 
