@@ -12,6 +12,10 @@
       "status": "active",
       "steps": [
         {
+          "name": "Cavaleiro — poses para avaliação",
+          "path": "cavaleiro-v2.md"
+        },
+        {
           "name": "Arte e conceitos",
           "path": "report.html"
         }
