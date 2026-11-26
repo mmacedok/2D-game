@@ -14,6 +14,14 @@ e um mundo grande e contínuo para farmar monstros, itens, poderes e nível, com
 Abra `project.godot` no Godot 4.7 e aperte F5: abre a vila (`cenas/vila-lobby.tscn`) com o Cavaleiro andando
 em WASD ou setas. Resolução interna 640×360, escala inteira, filtro Nearest.
 
+Para executar o lobby sem janela, rode na raiz do projeto com o executável do Godot no PATH:
+
+```sh
+godot --headless --path .
+```
+
+Para um teste rápido que encerra sozinho, acrescente `--quit-after 180`. O projeto abre a cena do lobby.
+
 ## Origem
 
 - Plano, regras, ferramentas, arte e skills: pacote MiniMMO-Pixel (github.com/mmacedok/MiniMMO-Pixel).

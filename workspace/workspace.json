@@ -12,6 +12,10 @@
       "status": "active",
       "steps": [
         {
+          "name": "Cavaleiro v2 — para avaliação",
+          "path": "cavaleiro-v2.md"
+        },
+        {
           "name": "Arte e conceitos",
           "path": "report.html"
         }
