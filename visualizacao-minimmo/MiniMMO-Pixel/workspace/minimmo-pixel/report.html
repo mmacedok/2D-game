@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="pt-BR" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mini-MMO pixel: arte e conceitos</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .section-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 20px 0 26px;
+    }
+    .section-nav a {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--mak-border);
+      background: var(--mak-surface);
+      color: var(--mak-text);
+      font-size: 12px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .section-nav a:hover {
+      border-color: var(--mak-accent);
+      color: var(--mak-accent);
+    }
+    .asset-grid,
+    .sprite-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+      gap: 18px;
+      margin: 18px 0;
+    }
+    .concept-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin: 18px 0;
+    }
+    .asset-card,
+    .concept-card,
+    .sprite-card {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .asset-card .card-header,
+    .concept-card .card-header,
+    .sprite-card .card-header {
+      margin: 0;
+      align-items: flex-start;
+    }
+    .card-head-copy {
+      flex: 1;
+      min-width: 0;
+    }
+    .verdict-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .verdict-approved {
+      background: #22c55e20;
+      color: #4ade80;
+      border: 1px solid #22c55e55;
+    }
+    .verdict-ref {
+      background: #38bdf820;
+      color: #7dd3fc;
+      border: 1px solid #38bdf855;
+    }
+    .verdict-rejected {
+      background: #ef444420;
+      color: #f87171;
+      border: 1px solid #ef444455;
+    }
+    html[data-mrmak-theme="light"] .verdict-approved {
+      background: #16a34a18;
+      color: #15803d;
+      border-color: #16a34a45;
+    }
+    html[data-mrmak-theme="light"] .verdict-ref {
+      background: #0284c718;
+      color: #0369a1;
+      border-color: #0284c745;
+    }
+    html[data-mrmak-theme="light"] .verdict-rejected {
+      background: #dc262618;
+      color: #b91c1c;
+      border-color: #dc262645;
+    }
+    .media-stage,
+    .sprite-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--mak-border);
+      background: #101116;
+      overflow: hidden;
+    }
+    .media-stage img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+    .pixel-stage img,
+    .sprite-stage img {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    .palette-stage {
+      padding: 16px 12px;
+    }
+    .palette-stage img {
+      width: 100%;
+      height: 36px;
+      object-fit: fill;
+      border-radius: 4px;
+    }
+    .sprite-stage {
+      min-height: 200px;
+      background:
+        repeating-conic-gradient(#1b1d24 0% 25%, #14161c 0% 50%) 50% / 16px 16px;
+    }
+    .sprite-stage.compact {
+      min-height: 168px;
+      padding: 10px;
+    }
+    .sprite-stage img {
+      width: auto;
+      max-width: 100%;
+      max-height: 240px;
+      height: auto;
+      object-fit: contain;
+    }
+    .sprite-stage.raw img {
+      image-rendering: auto;
+      border-radius: 6px;
+    }
+    .prancha-stage {
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--mak-border);
+      background: #101116;
+      overflow-x: auto;
+    }
+    .prancha-stage img {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      height: auto;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      border-radius: 6px;
+    }
+    .meta-grid {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      font-size: 13px;
+    }
+    .meta-grid > div {
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      gap: 8px;
+      align-items: baseline;
+    }
+    .meta-grid dt {
+      color: var(--mak-muted);
+      font-size: 12px;
+    }
+    .meta-grid dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      align-items: center;
+    }
+    .card-actions .media-download {
+      margin-top: 0;
+    }
+    .rejected-card .variants {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+      gap: 12px;
+    }
+    .rejected-card .variant {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .rejected-card .variant .var-label {
+      margin: 0;
+    }
+    @media (max-width: 600px) {
+      .meta-grid > div {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <div class="eyebrow">MiniMMO-Pixel · Arte, paletas, conceitos e sprites · 2026-11-26</div>
+    <h1>Mini-MMO pixel: arte e conceitos</h1>
+    <p class="subtitle">
+      Registro completo da direção visual do projeto <code>MiniMMO-Pixel</code>: referência de estilo aprovada, paletas (vila 44 cores e masmorra +48 cores), telas na visão do jogador (aprovadas), telas panorâmicas rejeitadas, sprites frontais 32×32, chefe 64×64 e histórico de tentativas rejeitadas.
+    </p>
+
+    <div class="stats">
+      <div><strong>33</strong><small>Imagens exibidas no cartão (5 seções)</small></div>
+      <div><strong>44 + 48</strong><small>Cores (paleta da vila + masmorra)</small></div>
+      <div><strong>10 + 6</strong><small>Sprites aprovados + rejeitados</small></div>
+    </div>
+
+    <div class="callout">
+      <strong>Resumo do pipeline:</strong> todas as gerações de IA usaram o <strong>Codex GPT-6.2 Sol</strong> (conceitos D–F e sprites) ou o modelo do <code>config.toml</code> pela ponte antiga (conceitos A–C, tarefa 34). Os sprites foram reduzidos e travados na paleta por <code>tools/pixelize.py</code> e conferidos com <code>tools/check_art.py</code> (<strong>70 arquivo(s), 0 erro(s)</strong>). Clique em qualquer imagem para abrir a prévia em tamanho real e baixar, ou use os links diretos de download em cada cartão.
+    </div>
+
+    <nav class="section-nav" aria-label="Seções do relatório">
+      <a href="#sec-referencia">1. Referência e paletas (5)</a>
+      <a href="#sec-conceitos-aprovados">2. Visão do jogador D–F (3)</a>
+      <a href="#sec-conceitos-rejeitados">3. Telas rejeitadas A–C (3)</a>
+      <a href="#sec-sprites-aprovados">4. Sprites aprovados e chefe (11)</a>
+      <a href="#sec-sprites-rejeitados">5. Sprites rejeitados (6 casos)</a>
+    </nav>
+
+    <section class="report-section" aria-labelledby="sec-referencia">
+      <h2 id="sec-referencia">1. Referência de estilo aprovada e paletas</h2>
+      <p>
+        Estilo único definido pela vila enviada pelo Raffel, acompanhado das prévias geradas por script Python na grade 512×341 e das duas paletas oficiais do projeto.
+      </p>
+      <div class="asset-grid">
+      <article class="obj-card asset-card">
+        <div class="card-header">
+          <div class="card-num">01</div>
+          <div class="card-head-copy">
+            <div class="card-title">Vila aprovada (conceito-mestre de estilo)</div>
+            <div class="card-desc"><code>art/referencia/vila-aprovada.jpg</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="media-stage">
+          <img src="media/referencia/vila-aprovada.jpg" alt="Vila medieval em pixel art 3/4 top-down enviada pelo Raffel, aprovada como referência única de estilo" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Especificação</dt><dd>JPG · 1536×1024 · Referência enviada pelo Raffel</dd></div>
+          <div><dt>IA / origem</dt><dd>Conceito artístico enviado pelo Raffel (sem prompt de IA)</dd></div>
+          <div><dt>Veredito</dt><dd>Aprovada como estilo único do projeto: câmera top-down 3/4 ortográfica, luz vindo do canto superior esquerdo, contornos escuros nítidos e blocos de cor vibrantes para personagens e estruturas.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/referencia/vila-aprovada.jpg" download="vila-aprovada.jpg">Baixar vila-aprovada.jpg</a>
+        </div>
+      </article>
+      <article class="obj-card asset-card">
+        <div class="card-header">
+          <div class="card-num">02</div>
+          <div class="card-head-copy">
+            <div class="card-title">Vila pixelizada na grade real</div>
+            <div class="card-desc"><code>art/referencia/vila-pixelizada-preview.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-ref">REFERÊNCIA</span>
+        </div>
+        <div class="media-stage pixel-stage">
+          <img src="media/referencia/vila-pixelizada-preview.png" alt="Vila convertida por script Python para a grade real de 512×341 usando a paleta de 44 cores" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Especificação</dt><dd>PNG · 1024×682 (prévia 2× da grade 512×341)</dd></div>
+          <div><dt>IA / origem</dt><dd>Script Python (conversão para grade 512×341 e paleta da vila)</dd></div>
+          <div><dt>Veredito</dt><dd>Referência técnica para demonstrar a densidade real de pixels e a leitura com a paleta da vila (44 cores).</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/referencia/vila-pixelizada-preview.png" download="vila-pixelizada-preview.png">Baixar vila-pixelizada-preview.png</a>
+        </div>
+      </article>
+      <article class="obj-card asset-card">
+        <div class="card-header">
+          <div class="card-num">03</div>
+          <div class="card-head-copy">
+            <div class="card-title">Clima das áreas de masmorra</div>
+            <div class="card-desc"><code>art/referencia/clima-masmorra-preview.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-ref">REFERÊNCIA</span>
+        </div>
+        <div class="media-stage pixel-stage">
+          <img src="media/referencia/clima-masmorra-preview.png" alt="Estudo de clima e cores escuras para áreas fora da vila usando a paleta da masmorra" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Especificação</dt><dd>PNG · 1024×682 · Paleta escura aplicada por script</dd></div>
+          <div><dt>IA / origem</dt><dd>Script Python (aplicação da paleta escura sobre a cena de referência)</dd></div>
+          <div><dt>Veredito</dt><dd>Referência aprovada de atmosfera para zonas fora da vila (floresta, cemitério e minas): tons terrosos, baixos em saturação, destacando jogadores e magias.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/referencia/clima-masmorra-preview.png" download="clima-masmorra-preview.png">Baixar clima-masmorra-preview.png</a>
+        </div>
+      </article>
+      <article class="obj-card asset-card">
+        <div class="card-header">
+          <div class="card-num">04</div>
+          <div class="card-head-copy">
+            <div class="card-title">Paleta da vila (44 cores)</div>
+            <div class="card-desc"><code>art/paleta.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="media-stage palette-stage">
+          <img src="media/referencia/paleta.png" alt="Faixa com as 44 cores da paleta da vila em art/paleta.hex" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Especificação</dt><dd>PNG · 1408×32 · 44 cores (art/paleta.hex)</dd></div>
+          <div><dt>IA / origem</dt><dd>Script Python (40 cores originais da vila + 4 roxos adicionados para o necromante v3)</dd></div>
+          <div><dt>Veredito</dt><dd>Paleta obrigatória para personagens jogáveis, skins, ícones e UI — garante que os jogadores se destaquem mesmo nas áreas escuras.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/referencia/paleta.png" download="paleta.png">Baixar paleta.png</a>
+        </div>
+      </article>
+      <article class="obj-card asset-card">
+        <div class="card-header">
+          <div class="card-num">05</div>
+          <div class="card-head-copy">
+            <div class="card-title">Paleta da masmorra (48 cores extras)</div>
+            <div class="card-desc"><code>art/paleta-masmorra.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="media-stage palette-stage">
+          <img src="media/referencia/paleta-masmorra.png" alt="Faixa com as 48 cores escuras da paleta da masmorra em art/paleta-masmorra.hex" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Especificação</dt><dd>PNG · 1536×32 · 48 cores escuras (92 no total com a vila)</dd></div>
+          <div><dt>IA / origem</dt><dd>Script Python (art/paleta-masmorra.hex)</dd></div>
+          <div><dt>Veredito</dt><dd>Paleta complementar permitida apenas para assets dentro de art/masmorra/ (tiles, objetos, monstros e chefes).</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/referencia/paleta-masmorra.png" download="paleta-masmorra.png">Baixar paleta-masmorra.png</a>
+        </div>
+      </article>
+      </div>
+    </section>
+
+    <section class="report-section" aria-labelledby="sec-conceitos-aprovados">
+      <h2 id="sec-conceitos-aprovados">2. Telas na visão do jogador (aprovadas)</h2>
+      <p>
+        Mockups de gameplay (640×360 ampliados 3× com vizinho mais próximo para 1920×1080) gerados com <strong>Codex GPT-6.2 Sol</strong> (ImageGen), seguindo a câmera aproximada no jogador. <strong>Veredito geral:</strong> aprovadas como referência de clima; em todas elas o jogador ficou ligeiramente fora do centro exato, desvio aceitável para mockup. Os prompts e vereditos de todas as tentativas (v1, v2 e v3) foram preservados abaixo de cada tela.
+      </p>
+      <div class="concept-grid">
+      <article class="obj-card concept-card">
+        <div class="card-header">
+          <div class="card-num">D</div>
+          <div class="card-head-copy">
+            <div class="card-title">D — Floresta Sombria (visão do jogador)</div>
+            <div class="card-desc"><code>art/conceitos/D-jogador-floresta-sombria.png</code> · 1920×1080 (640×360 ampliado 3× nearest neighbor)</div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="media-stage pixel-stage">
+          <img src="media/conceitos/D-jogador-floresta-sombria.png" alt="Mockup de gameplay na Floresta Sombria com cavaleiro vermelho e prata no centro aproximado, 10 outros jogadores e 4 lobos cinzentos" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / modelo</dt><dd>Codex GPT-6.2 Sol (ImageGen; referências: vila-aprovada.jpg, clima-masmorra-preview.png, conceito panorâmico A/B/C e versão anterior em v2/v3)</dd></div>
+          <div><dt>Veredito</dt><dd>Aprovada como referência de clima (v3 selecionada). Cavaleiro com cerca de 87 px ligeiramente à direita e abaixo do centro exato, com anel dourado, 10 outros jogadores e 4 lobos; sem texto legível. Desvio pequeno de centralização considerado aceitável em mockup.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/conceitos/D-jogador-floresta-sombria.png" download="D-jogador-floresta-sombria.png">Baixar D-jogador-floresta-sombria.png</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Tentativa 1 (v1) — REJEITADA: cavaleiro ~145 px, HUD com barras duplicadas e jogador à esquerda do centro</summary><pre>In-game screenshot of a 2D pixel art online action RPG, exactly what the player sees on a 1920x1080 monitor. Native resolution 640x360 upscaled 3x with nearest neighbor: every game pixel is a crisp 3x3 block, 16x16 tiles (48 screen px), characters about 72 screen px tall. Close gameplay camera that follows the player: the player&#x27;s own character stands exactly in the center of the image with a thin gold ring under its feet. Top-down 3/4 orthographic view like the attached village (not isometric, not side view, no perspective, no sky, no horizon, no map edges); the world continues beyond all four edges. Same chunky drawing style, dark outlines and top-left light as the attached village, but with the earthy, grimy, darker colors of the second attached image: muted browns, moss greens, wet grey stone, old wood, mud. Only magic and fire are strongly colored. Players are the brightest, most colorful things on screen. Classes: red-silver knight with lion shield, blue-gold wizard with orb staff, purple skeleton necromancer, green-hooded archer, white-gold priest, grey-black rogue with two daggers.
+Diablo-style HUD at 3x pixel scale: centered bottom bar of dark stone with gold trim, red health bar and blue mana bar side by side, 10 small square skill slots with colorful skill icons; small portrait frame top-left; round minimap top-right; a small semi-transparent chat box bottom-left with unreadable pixel squiggles. No readable words, letters or numbers anywhere, no logos, no watermark, no known characters.
+
+The player is a red-silver knight swinging a sword in a golden arc at two grey wolves. Around: an archer and a wizard of the same party, a few other players passing by on the muddy dirt road with cart tracks. Twisted trees, broken fence, a small camp with a bonfire at one side. In one corner, the edge of the colorful village wall with a red banner, showing the village is close. Two more wolves at the edge of the road make four enemies total.
+
+Use case: stylized-concept. Generate one new full-bleed widescreen 16:9 game screenshot. Attachment 1 is the style and orthographic-angle reference. Attachment 2 is the palette reference. Attachment 3 supplies only environmental motifs and monster design; discard its panoramic layout, extra encounters and HUD proportions. Show a single local encounter on one traversable ground plane. Exactly eleven playable sprites: the selected avatar and ten others, clearly separated and visually countable, including the two specified nearby allies. The middle of the selected avatar&#x27;s body is at normalized (0.500, 0.500); its thin, distinct gold ground ellipse directly beneath its feet. Draw the sprite&#x27;s body about 6.67% of total image height, excluding effects and weapons, and use the same body scale for the other playable sprites. All actors stay at the same camera distance. Frame a small stretch of the area with trees, structures and ground cropped by the screen. Do not show the entire forest, graveyard or mine room. HUD is a small overlay and the portrait shows the selected class. Text-free HUD, with abstract dash clusters in chat only.</pre></details>
+<details class="prompt-disclosure"><summary>Tentativa 2 (v2) — REJEITADA: cavaleiro ~100 px e HUD com barras duplicadas</summary><pre>In-game screenshot of a 2D pixel art online action RPG, exactly what the player sees on a 1920x1080 monitor. Native resolution 640x360 upscaled 3x with nearest neighbor: every game pixel is a crisp 3x3 block, 16x16 tiles (48 screen px), characters about 72 screen px tall. Close gameplay camera that follows the player: the player&#x27;s own character stands exactly in the center of the image with a thin gold ring under its feet. Top-down 3/4 orthographic view like the attached village (not isometric, not side view, no perspective, no sky, no horizon, no map edges); the world continues beyond all four edges. Same chunky drawing style, dark outlines and top-left light as the attached village, but with the earthy, grimy, darker colors of the second attached image: muted browns, moss greens, wet grey stone, old wood, mud. Only magic and fire are strongly colored. Players are the brightest, most colorful things on screen. Classes: red-silver knight with lion shield, blue-gold wizard with orb staff, purple skeleton necromancer, green-hooded archer, white-gold priest, grey-black rogue with two daggers.
+Diablo-style HUD at 3x pixel scale: centered bottom bar of dark stone with gold trim, red health bar and blue mana bar side by side, 10 small square skill slots with colorful skill icons; small portrait frame top-left; round minimap top-right; a small semi-transparent chat box bottom-left with unreadable pixel squiggles. No readable words, letters or numbers anywhere, no logos, no watermark, no known characters.
+
+The player is a red-silver knight swinging a sword in a golden arc at two grey wolves. Around: an archer and a wizard of the same party, a few other players passing by on the muddy dirt road with cart tracks. Twisted trees, broken fence, a small camp with a bonfire at one side. In one corner, the edge of the colorful village wall with a red banner, showing the village is close. Two more wolves at the edge of the road make four enemies total.
+
+Use case: stylized-concept. Generate one new full-bleed widescreen 16:9 game screenshot. Attachment 1 is the style and orthographic-angle reference. Attachment 2 is the palette reference. Attachment 3 supplies only environmental motifs and monster design; discard its panoramic layout, extra encounters and HUD proportions. Show a single local encounter on one traversable ground plane. Exactly eleven playable sprites: the selected avatar and ten others, clearly separated and visually countable, including the two specified nearby allies. The middle of the selected avatar&#x27;s body is at normalized (0.500, 0.500); its thin, distinct gold ground ellipse directly beneath its feet. Draw the sprite&#x27;s body about 6.67% of total image height, excluding effects and weapons, and use the same body scale for the other playable sprites. All actors stay at the same camera distance. Frame a small stretch of the area with trees, structures and ground cropped by the screen. Do not show the entire forest, graveyard or mine room. HUD is a small overlay and the portrait shows the selected class. Text-free HUD, with abstract dash clusters in chat only.
+
+Attachment 4 is the first draft of this scene. Correct its sprite scale: the first draft draws humans about 140 pixels tall; make every playable character sprite approximately HALF as tall relative to the frame as attachment 4. This is a strict size correction, not a panoramic overview. Keep the local view, the same low actor count and stage of the encounter, and a comparable amount of scenery. Draw the characters with simple 16-by-24 native pixel anatomy on the 640×360 canvas: each avatar&#x27;s entire headgear and boots fit within 24 rows; the full frame is fifteen avatar heights tall. Center the hero&#x27;s torso at (320,180) on that canvas, and place the gold ring immediately below their boots. Keep only one health/mana pair at the bottom.</pre></details>
+<details class="prompt-disclosure"><summary>Tentativa 3 (v3) — APROVADA (selecionada com pequenos desvios aceitáveis em mockup)</summary><pre>In-game screenshot of a 2D pixel art online action RPG, exactly what the player sees on a 1920x1080 monitor. Native resolution 640x360 upscaled 3x with nearest neighbor: every game pixel is a crisp 3x3 block, 16x16 tiles (48 screen px), characters about 72 screen px tall. Close gameplay camera that follows the player: the player&#x27;s own character stands exactly in the center of the image with a thin gold ring under its feet. Top-down 3/4 orthographic view like the attached village (not isometric, not side view, no perspective, no sky, no horizon, no map edges); the world continues beyond all four edges. Same chunky drawing style, dark outlines and top-left light as the attached village, but with the earthy, grimy, darker colors of the second attached image: muted browns, moss greens, wet grey stone, old wood, mud. Only magic and fire are strongly colored. Players are the brightest, most colorful things on screen. Classes: red-silver knight with lion shield, blue-gold wizard with orb staff, purple skeleton necromancer, green-hooded archer, white-gold priest, grey-black rogue with two daggers.
+Diablo-style HUD at 3x pixel scale: centered bottom bar of dark stone with gold trim, red health bar and blue mana bar side by side, 10 small square skill slots with colorful skill icons; small portrait frame top-left; round minimap top-right; a small semi-transparent chat box bottom-left with unreadable pixel squiggles. No readable words, letters or numbers anywhere, no logos, no watermark, no known characters.
+
+The player is a red-silver knight swinging a sword in a golden arc at two grey wolves. Around: an archer and a wizard of the same party, a few other players passing by on the muddy dirt road with cart tracks. Twisted trees, broken fence, a small camp with a bonfire at one side. In one corner, the edge of the colorful village wall with a red banner, showing the village is close. Two more wolves at the edge of the road make four enemies total.
+
+Use case: stylized-concept. Generate one new full-bleed widescreen 16:9 game screenshot. Attachment 1 is the style and orthographic-angle reference. Attachment 2 is the palette reference. Attachment 3 supplies only environmental motifs and monster design; discard its panoramic layout, extra encounters and HUD proportions. Show a single local encounter on one traversable ground plane. Exactly eleven playable sprites: the selected avatar and ten others, clearly separated and visually countable, including the two specified nearby allies. The middle of the selected avatar&#x27;s body is at normalized (0.500, 0.500); its thin, distinct gold ground ellipse directly beneath its feet. Draw the sprite&#x27;s body about 6.67% of total image height, excluding effects and weapons, and use the same body scale for the other playable sprites. All actors stay at the same camera distance. Frame a small stretch of the area with trees, structures and ground cropped by the screen. Do not show the entire forest, graveyard or mine room. HUD is a small overlay and the portrait shows the selected class. Text-free HUD, with abstract dash clusters in chat only.
+
+Use attachment 4 as the layout to revise. Preserve its local encounter framing and all fixed terrain, route layout and distances between props. Current character bodies are about 100–110 px on a normalized 1920×1080 screen. Reduce sprite bodies to 70% of their size in attachment 4, from top of hat or plume to boot soles, excluding weapons. Do not zoom the camera out or add more terrain. Have the selected playable character occupy rows 504–575 of the normalized 1080-pixel frame and be centered at x=960. Its feet are near y=575, with the gold ellipse directly below. Position the main character farther right and down slightly compared with attachment 4 while shrinking the sprite. Keep the HUD free of letters and numbers. Remove the duplicate red and blue bars beside the top-left portrait; show just the small portrait there.</pre></details>
+      </article>
+      <article class="obj-card concept-card">
+        <div class="card-header">
+          <div class="card-num">E</div>
+          <div class="card-head-copy">
+            <div class="card-title">E — Cemitério Antigo (visão do jogador)</div>
+            <div class="card-desc"><code>art/conceitos/E-jogador-cemiterio-antigo.png</code> · 1920×1080 (640×360 ampliado 3× nearest neighbor)</div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="media-stage pixel-stage">
+          <img src="media/conceitos/E-jogador-cemiterio-antigo.png" alt="Mockup de gameplay no Cemitério Antigo com necromante roxo no centro aproximado, dois esqueletos aliados, cinco zumbis e oito jogadores" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / modelo</dt><dd>Codex GPT-6.2 Sol (ImageGen; referências: vila-aprovada.jpg, clima-masmorra-preview.png, conceito panorâmico A/B/C e versão anterior em v2/v3)</dd></div>
+          <div><dt>Veredito</dt><dd>Aprovada como referência de clima (v3 selecionada). Necromante de cerca de 90 px ligeiramente à direita e abaixo do centro exato, com anel dourado, 8 outros jogadores, 2 esqueletos aliados e 5 zumbis; sem texto legível. Desvio de centralização aceitável em mockup.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/conceitos/E-jogador-cemiterio-antigo.png" download="E-jogador-cemiterio-antigo.png">Baixar E-jogador-cemiterio-antigo.png</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Tentativa 1 (v1) — REJEITADA: necromante ~145 px, apenas 3 zumbis e HUD com barras duplicadas</summary><pre>In-game screenshot of a 2D pixel art online action RPG, exactly what the player sees on a 1920x1080 monitor. Native resolution 640x360 upscaled 3x with nearest neighbor: every game pixel is a crisp 3x3 block, 16x16 tiles (48 screen px), characters about 72 screen px tall. Close gameplay camera that follows the player: the player&#x27;s own character stands exactly in the center of the image with a thin gold ring under its feet. Top-down 3/4 orthographic view like the attached village (not isometric, not side view, no perspective, no sky, no horizon, no map edges); the world continues beyond all four edges. Same chunky drawing style, dark outlines and top-left light as the attached village, but with the earthy, grimy, darker colors of the second attached image: muted browns, moss greens, wet grey stone, old wood, mud. Only magic and fire are strongly colored. Players are the brightest, most colorful things on screen. Classes: red-silver knight with lion shield, blue-gold wizard with orb staff, purple skeleton necromancer, green-hooded archer, white-gold priest, grey-black rogue with two daggers.
+Diablo-style HUD at 3x pixel scale: centered bottom bar of dark stone with gold trim, red health bar and blue mana bar side by side, 10 small square skill slots with colorful skill icons; small portrait frame top-left; round minimap top-right; a small semi-transparent chat box bottom-left with unreadable pixel squiggles. No readable words, letters or numbers anywhere, no logos, no watermark, no known characters.
+
+The player is a purple skeleton necromancer with two summoned skeletons beside it, fighting zombies rising from graves. Nearby a priest casting a gold healing circle and a knight blocking. Crooked gravestones, iron fence, an open crypt, purple wisps and low fog, part of a ruined chapel wall cut by the top edge. Five zombies total, with moss-green clothing to differentiate them from the two bone-white allied summons.
+
+Use case: stylized-concept. Generate one new full-bleed widescreen 16:9 game screenshot. Attachment 1 is the style and orthographic-angle reference. Attachment 2 is the palette reference. Attachment 3 supplies only environmental motifs and monster design; discard its panoramic layout, extra encounters and HUD proportions. Show a single local encounter on one traversable ground plane. Exactly eleven playable sprites: the selected avatar and ten others, clearly separated and visually countable, including the two specified nearby allies. The middle of the selected avatar&#x27;s body is at normalized (0.500, 0.500); its thin, distinct gold ground ellipse directly beneath its feet. Draw the sprite&#x27;s body about 6.67% of total image height, excluding effects and weapons, and use the same body scale for the other playable sprites. All actors stay at the same camera distance. Frame a small stretch of the area with trees, structures and ground cropped by the screen. Do not show the entire forest, graveyard or mine room. HUD is a small overlay and the portrait shows the selected class. Text-free HUD, with abstract dash clusters in chat only.</pre></details>
+<details class="prompt-disclosure"><summary>Tentativa 2 (v2) — REJEITADA: necromante ~105 px, apenas 3 zumbis e HUD com barras duplicadas</summary><pre>In-game screenshot of a 2D pixel art online action RPG, exactly what the player sees on a 1920x1080 monitor. Native resolution 640x360 upscaled 3x with nearest neighbor: every game pixel is a crisp 3x3 block, 16x16 tiles (48 screen px), characters about 72 screen px tall. Close gameplay camera that follows the player: the player&#x27;s own character stands exactly in the center of the image with a thin gold ring under its feet. Top-down 3/4 orthographic view like the attached village (not isometric, not side view, no perspective, no sky, no horizon, no map edges); the world continues beyond all four edges. Same chunky drawing style, dark outlines and top-left light as the attached village, but with the earthy, grimy, darker colors of the second attached image: muted browns, moss greens, wet grey stone, old wood, mud. Only magic and fire are strongly colored. Players are the brightest, most colorful things on screen. Classes: red-silver knight with lion shield, blue-gold wizard with orb staff, purple skeleton necromancer, green-hooded archer, white-gold priest, grey-black rogue with two daggers.
+Diablo-style HUD at 3x pixel scale: centered bottom bar of dark stone with gold trim, red health bar and blue mana bar side by side, 10 small square skill slots with colorful skill icons; small portrait frame top-left; round minimap top-right; a small semi-transparent chat box bottom-left with unreadable pixel squiggles. No readable words, letters or numbers anywhere, no logos, no watermark, no known characters.
+
+The player is a purple skeleton necromancer with two summoned skeletons beside it, fighting zombies rising from graves. Nearby a priest casting a gold healing circle and a knight blocking. Crooked gravestones, iron fence, an open crypt, purple wisps and low fog, part of a ruined chapel wall cut by the top edge. Five zombies total, with moss-green clothing to differentiate them from the two bone-white allied summons.
+
+Use case: stylized-concept. Generate one new full-bleed widescreen 16:9 game screenshot. Attachment 1 is the style and orthographic-angle reference. Attachment 2 is the palette reference. Attachment 3 supplies only environmental motifs and monster design; discard its panoramic layout, extra encounters and HUD proportions. Show a single local encounter on one traversable ground plane. Exactly eleven playable sprites: the selected avatar and ten others, clearly separated and visually countable, including the two specified nearby allies. The middle of the selected avatar&#x27;s body is at normalized (0.500, 0.500); its thin, distinct gold ground ellipse directly beneath its feet. Draw the sprite&#x27;s body about 6.67% of total image height, excluding effects and weapons, and use the same body scale for the other playable sprites. All actors stay at the same camera distance. Frame a small stretch of the area with trees, structures and ground cropped by the screen. Do not show the entire forest, graveyard or mine room. HUD is a small overlay and the portrait shows the selected class. Text-free HUD, with abstract dash clusters in chat only.
+
+Attachment 4 is the first draft of this scene. Correct its sprite scale: the first draft draws humans about 140 pixels tall; make every playable character sprite approximately HALF as tall relative to the frame as attachment 4. This is a strict size correction, not a panoramic overview. Keep the local view, the same low actor count and stage of the encounter, and a comparable amount of scenery. Draw the characters with simple 16-by-24 native pixel anatomy on the 640×360 canvas: each avatar&#x27;s entire headgear and boots fit within 24 rows; the full frame is fifteen avatar heights tall. Center the hero&#x27;s torso at (320,180) on that canvas, and place the gold ring immediately below their boots. Keep only one health/mana pair at the bottom. Show five distinct zombies around open graves, in addition to the two allied skeletons.</pre></details>
+<details class="prompt-disclosure"><summary>Tentativa 3 (v3) — APROVADA (selecionada com pequenos desvios aceitáveis em mockup)</summary><pre>In-game screenshot of a 2D pixel art online action RPG, exactly what the player sees on a 1920x1080 monitor. Native resolution 640x360 upscaled 3x with nearest neighbor: every game pixel is a crisp 3x3 block, 16x16 tiles (48 screen px), characters about 72 screen px tall. Close gameplay camera that follows the player: the player&#x27;s own character stands exactly in the center of the image with a thin gold ring under its feet. Top-down 3/4 orthographic view like the attached village (not isometric, not side view, no perspective, no sky, no horizon, no map edges); the world continues beyond all four edges. Same chunky drawing style, dark outlines and top-left light as the attached village, but with the earthy, grimy, darker colors of the second attached image: muted browns, moss greens, wet grey stone, old wood, mud. Only magic and fire are strongly colored. Players are the brightest, most colorful things on screen. Classes: red-silver knight with lion shield, blue-gold wizard with orb staff, purple skeleton necromancer, green-hooded archer, white-gold priest, grey-black rogue with two daggers.
+Diablo-style HUD at 3x pixel scale: centered bottom bar of dark stone with gold trim, red health bar and blue mana bar side by side, 10 small square skill slots with colorful skill icons; small portrait frame top-left; round minimap top-right; a small semi-transparent chat box bottom-left with unreadable pixel squiggles. No readable words, letters or numbers anywhere, no logos, no watermark, no known characters.
+
+The player is a purple skeleton necromancer with two summoned skeletons beside it, fighting zombies rising from graves. Nearby a priest casting a gold healing circle and a knight blocking. Crooked gravestones, iron fence, an open crypt, purple wisps and low fog, part of a ruined chapel wall cut by the top edge. Five zombies total, with moss-green clothing to differentiate them from the two bone-white allied summons.
+
+Use case: stylized-concept. Generate one new full-bleed widescreen 16:9 game screenshot. Attachment 1 is the style and orthographic-angle reference. Attachment 2 is the palette reference. Attachment 3 supplies only environmental motifs and monster design; discard its panoramic layout, extra encounters and HUD proportions. Show a single local encounter on one traversable ground plane. Exactly eleven playable sprites: the selected avatar and ten others, clearly separated and visually countable, including the two specified nearby allies. The middle of the selected avatar&#x27;s body is at normalized (0.500, 0.500); its thin, distinct gold ground ellipse directly beneath its feet. Draw the sprite&#x27;s body about 6.67% of total image height, excluding effects and weapons, and use the same body scale for the other playable sprites. All actors stay at the same camera distance. Frame a small stretch of the area with trees, structures and ground cropped by the screen. Do not show the entire forest, graveyard or mine room. HUD is a small overlay and the portrait shows the selected class. Text-free HUD, with abstract dash clusters in chat only.
+
+Use attachment 4 as the layout to revise. Preserve its local encounter framing and all fixed terrain, route layout and distances between props. Current character bodies are about 100–110 px on a normalized 1920×1080 screen. Reduce sprite bodies to 70% of their size in attachment 4, from top of hat or plume to boot soles, excluding weapons. Do not zoom the camera out or add more terrain. Have the selected playable character occupy rows 504–575 of the normalized 1080-pixel frame and be centered at x=960. Its feet are near y=575, with the gold ellipse directly below. Position the main character farther right and down slightly compared with attachment 4 while shrinking the sprite. Keep the HUD free of letters and numbers. Remove the duplicate red and blue bars beside the top-left portrait; show just the small portrait there. Add a green zombie climbing halfway out of each of the two visible open graves, making FIVE green zombies with the three existing ones; keep two pale allied skeletons.</pre></details>
+      </article>
+      <article class="obj-card concept-card">
+        <div class="card-header">
+          <div class="card-num">F</div>
+          <div class="card-head-copy">
+            <div class="card-title">F — Minas Abandonadas (visão do jogador)</div>
+            <div class="card-desc"><code>art/conceitos/F-jogador-minas-abandonadas.png</code> · 1920×1080 (640×360 ampliado 3× nearest neighbor)</div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="media-stage pixel-stage">
+          <img src="media/conceitos/F-jogador-minas-abandonadas.png" alt="Mockup de gameplay nas Minas Abandonadas com mago azul e dourado lançando feitiço de gelo em aranha gigante, trilhos, lava e 10 outros jogadores" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / modelo</dt><dd>Codex GPT-6.2 Sol (ImageGen; referências: vila-aprovada.jpg, clima-masmorra-preview.png, conceito panorâmico A/B/C e versão anterior em v2/v3)</dd></div>
+          <div><dt>Veredito</dt><dd>Aprovada como referência de clima (v3 selecionada). Mago de cerca de 76 px ligeiramente abaixo do centro exato, com anel dourado, 10 outros jogadores e 5 monstros; sem texto legível. Desvio de centralização aceitável em mockup.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/conceitos/F-jogador-minas-abandonadas.png" download="F-jogador-minas-abandonadas.png">Baixar F-jogador-minas-abandonadas.png</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Tentativa 1 (v1) — REJEITADA: mago ~135 px e acima do centro</summary><pre>In-game screenshot of a 2D pixel art online action RPG, exactly what the player sees on a 1920x1080 monitor. Native resolution 640x360 upscaled 3x with nearest neighbor: every game pixel is a crisp 3x3 block, 16x16 tiles (48 screen px), characters about 72 screen px tall. Close gameplay camera that follows the player: the player&#x27;s own character stands exactly in the center of the image with a thin gold ring under its feet. Top-down 3/4 orthographic view like the attached village (not isometric, not side view, no perspective, no sky, no horizon, no map edges); the world continues beyond all four edges. Same chunky drawing style, dark outlines and top-left light as the attached village, but with the earthy, grimy, darker colors of the second attached image: muted browns, moss greens, wet grey stone, old wood, mud. Only magic and fire are strongly colored. Players are the brightest, most colorful things on screen. Classes: red-silver knight with lion shield, blue-gold wizard with orb staff, purple skeleton necromancer, green-hooded archer, white-gold priest, grey-black rogue with two daggers.
+Diablo-style HUD at 3x pixel scale: centered bottom bar of dark stone with gold trim, red health bar and blue mana bar side by side, 10 small square skill slots with colorful skill icons; small portrait frame top-left; round minimap top-right; a small semi-transparent chat box bottom-left with unreadable pixel squiggles. No readable words, letters or numbers anywhere, no logos, no watermark, no known characters.
+
+The player is a blue-gold wizard casting a blue frost blast at a giant cave spider. Nearby a rogue and an archer, a stone golem further away. Rock floor with minecart rails crossing the screen, wooden support beams, glowing orange lava cracks, blue crystals, a lantern. Three small spiders nearby make five enemies in total.
+
+Use case: stylized-concept. Generate one new full-bleed widescreen 16:9 game screenshot. Attachment 1 is the style and orthographic-angle reference. Attachment 2 is the palette reference. Attachment 3 supplies only environmental motifs and monster design; discard its panoramic layout, extra encounters and HUD proportions. Show a single local encounter on one traversable ground plane. Exactly eleven playable sprites: the selected avatar and ten others, clearly separated and visually countable, including the two specified nearby allies. The middle of the selected avatar&#x27;s body is at normalized (0.500, 0.500); its thin, distinct gold ground ellipse directly beneath its feet. Draw the sprite&#x27;s body about 6.67% of total image height, excluding effects and weapons, and use the same body scale for the other playable sprites. All actors stay at the same camera distance. Frame a small stretch of the area with trees, structures and ground cropped by the screen. Do not show the entire forest, graveyard or mine room. HUD is a small overlay and the portrait shows the selected class. Text-free HUD, with abstract dash clusters in chat only.</pre></details>
+<details class="prompt-disclosure"><summary>Tentativa 2 (v2) — REJEITADA: mago ~95 px e acima do centro</summary><pre>In-game screenshot of a 2D pixel art online action RPG, exactly what the player sees on a 1920x1080 monitor. Native resolution 640x360 upscaled 3x with nearest neighbor: every game pixel is a crisp 3x3 block, 16x16 tiles (48 screen px), characters about 72 screen px tall. Close gameplay camera that follows the player: the player&#x27;s own character stands exactly in the center of the image with a thin gold ring under its feet. Top-down 3/4 orthographic view like the attached village (not isometric, not side view, no perspective, no sky, no horizon, no map edges); the world continues beyond all four edges. Same chunky drawing style, dark outlines and top-left light as the attached village, but with the earthy, grimy, darker colors of the second attached image: muted browns, moss greens, wet grey stone, old wood, mud. Only magic and fire are strongly colored. Players are the brightest, most colorful things on screen. Classes: red-silver knight with lion shield, blue-gold wizard with orb staff, purple skeleton necromancer, green-hooded archer, white-gold priest, grey-black rogue with two daggers.
+Diablo-style HUD at 3x pixel scale: centered bottom bar of dark stone with gold trim, red health bar and blue mana bar side by side, 10 small square skill slots with colorful skill icons; small portrait frame top-left; round minimap top-right; a small semi-transparent chat box bottom-left with unreadable pixel squiggles. No readable words, letters or numbers anywhere, no logos, no watermark, no known characters.
+
+The player is a blue-gold wizard casting a blue frost blast at a giant cave spider. Nearby a rogue and an archer, a stone golem further away. Rock floor with minecart rails crossing the screen, wooden support beams, glowing orange lava cracks, blue crystals, a lantern. Three small spiders nearby make five enemies in total.
+
+Use case: stylized-concept. Generate one new full-bleed widescreen 16:9 game screenshot. Attachment 1 is the style and orthographic-angle reference. Attachment 2 is the palette reference. Attachment 3 supplies only environmental motifs and monster design; discard its panoramic layout, extra encounters and HUD proportions. Show a single local encounter on one traversable ground plane. Exactly eleven playable sprites: the selected avatar and ten others, clearly separated and visually countable, including the two specified nearby allies. The middle of the selected avatar&#x27;s body is at normalized (0.500, 0.500); its thin, distinct gold ground ellipse directly beneath its feet. Draw the sprite&#x27;s body about 6.67% of total image height, excluding effects and weapons, and use the same body scale for the other playable sprites. All actors stay at the same camera distance. Frame a small stretch of the area with trees, structures and ground cropped by the screen. Do not show the entire forest, graveyard or mine room. HUD is a small overlay and the portrait shows the selected class. Text-free HUD, with abstract dash clusters in chat only.
+
+Attachment 4 is the first draft of this scene. Correct its sprite scale: the first draft draws humans about 140 pixels tall; make every playable character sprite approximately HALF as tall relative to the frame as attachment 4. This is a strict size correction, not a panoramic overview. Keep the local view, the same low actor count and stage of the encounter, and a comparable amount of scenery. Draw the characters with simple 16-by-24 native pixel anatomy on the 640×360 canvas: each avatar&#x27;s entire headgear and boots fit within 24 rows; the full frame is fifteen avatar heights tall. Center the hero&#x27;s torso at (320,180) on that canvas, and place the gold ring immediately below their boots. Keep only one health/mana pair at the bottom.</pre></details>
+<details class="prompt-disclosure"><summary>Tentativa 3 (v3) — APROVADA (selecionada com pequenos desvios aceitáveis em mockup)</summary><pre>In-game screenshot of a 2D pixel art online action RPG, exactly what the player sees on a 1920x1080 monitor. Native resolution 640x360 upscaled 3x with nearest neighbor: every game pixel is a crisp 3x3 block, 16x16 tiles (48 screen px), characters about 72 screen px tall. Close gameplay camera that follows the player: the player&#x27;s own character stands exactly in the center of the image with a thin gold ring under its feet. Top-down 3/4 orthographic view like the attached village (not isometric, not side view, no perspective, no sky, no horizon, no map edges); the world continues beyond all four edges. Same chunky drawing style, dark outlines and top-left light as the attached village, but with the earthy, grimy, darker colors of the second attached image: muted browns, moss greens, wet grey stone, old wood, mud. Only magic and fire are strongly colored. Players are the brightest, most colorful things on screen. Classes: red-silver knight with lion shield, blue-gold wizard with orb staff, purple skeleton necromancer, green-hooded archer, white-gold priest, grey-black rogue with two daggers.
+Diablo-style HUD at 3x pixel scale: centered bottom bar of dark stone with gold trim, red health bar and blue mana bar side by side, 10 small square skill slots with colorful skill icons; small portrait frame top-left; round minimap top-right; a small semi-transparent chat box bottom-left with unreadable pixel squiggles. No readable words, letters or numbers anywhere, no logos, no watermark, no known characters.
+
+The player is a blue-gold wizard casting a blue frost blast at a giant cave spider. Nearby a rogue and an archer, a stone golem further away. Rock floor with minecart rails crossing the screen, wooden support beams, glowing orange lava cracks, blue crystals, a lantern. Three small spiders nearby make five enemies in total.
+
+Use case: stylized-concept. Generate one new full-bleed widescreen 16:9 game screenshot. Attachment 1 is the style and orthographic-angle reference. Attachment 2 is the palette reference. Attachment 3 supplies only environmental motifs and monster design; discard its panoramic layout, extra encounters and HUD proportions. Show a single local encounter on one traversable ground plane. Exactly eleven playable sprites: the selected avatar and ten others, clearly separated and visually countable, including the two specified nearby allies. The middle of the selected avatar&#x27;s body is at normalized (0.500, 0.500); its thin, distinct gold ground ellipse directly beneath its feet. Draw the sprite&#x27;s body about 6.67% of total image height, excluding effects and weapons, and use the same body scale for the other playable sprites. All actors stay at the same camera distance. Frame a small stretch of the area with trees, structures and ground cropped by the screen. Do not show the entire forest, graveyard or mine room. HUD is a small overlay and the portrait shows the selected class. Text-free HUD, with abstract dash clusters in chat only.
+
+Use attachment 4 as the layout to revise. Preserve its local encounter framing and all fixed terrain, route layout and distances between props. Current character bodies are about 100–110 px on a normalized 1920×1080 screen. Reduce sprite bodies to 70% of their size in attachment 4, from top of hat or plume to boot soles, excluding weapons. Do not zoom the camera out or add more terrain. Have the selected playable character occupy rows 504–575 of the normalized 1080-pixel frame and be centered at x=960. Its feet are near y=575, with the gold ellipse directly below. Position the main character farther down by about 40 pixels (move both the wizard and his selection ring) compared with attachment 4 while shrinking the sprite. Keep the HUD free of letters and numbers.</pre></details>
+      </article>
+      </div>
+    </section>
+
+    <section class="report-section" aria-labelledby="sec-conceitos-rejeitados">
+      <h2 id="sec-conceitos-rejeitados">3. Telas rejeitadas (câmera de paisagem)</h2>
+      <p>
+        Primeira rodada de conceitos de área (tarefa 34 da ponte antiga, <code>34-minimmo-areas-conceito.md</code>), gerada pelo <strong>Codex</strong> (modelo do <code>config.toml</code>). <strong>Motivo da rejeição:</strong> câmera panorâmica de paisagem com personagens minúsculos, que não representa a visão real do jogador.
+      </p>
+      <div class="concept-grid">
+      <article class="obj-card concept-card">
+        <div class="card-header">
+          <div class="card-num">A</div>
+          <div class="card-head-copy">
+            <div class="card-title">A — Floresta Sombria (câmera de paisagem)</div>
+            <div class="card-desc"><code>art/rejeitadas/conceitos/A-floresta-sombria--camera-de-paisagem.png</code> · 1920×1080</div>
+          </div>
+          <span class="verdict-badge verdict-rejected">REJEITADA</span>
+        </div>
+        <div class="media-stage">
+          <img src="media/rejeitadas-conceitos/A-floresta-sombria--camera-de-paisagem.png" alt="Conceito panorâmico rejeitado da Floresta Sombria com muralha da vila no canto e personagens minúsculos" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / modelo</dt><dd>Codex (modelo configurado no <code>config.toml</code>, pela ponte antiga — tarefa 34)</dd></div>
+          <div><dt>Veredito</dt><dd><strong>REJEITADA:</strong> câmera de paisagem (panorâmica), personagens minúsculos; não representa a visão real do jogador. Reaproveitada apenas como referência de motivos ambientais para os conceitos D–F.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/rejeitadas-conceitos/A-floresta-sombria--camera-de-paisagem.png" download="A-floresta-sombria--camera-de-paisagem.png">Baixar A-floresta-sombria--camera-de-paisagem.png</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Prompt completo (bloco de estilo + cena da tarefa 34)</summary><p class="prompt-note">Copiado de D:\AI Workshop\Codex\Bridge\feitas\34-minimmo-areas-conceito.md</p><pre>In-game screenshot mockup of a 2D pixel art online action RPG (Diablo-like mood), 16:9, top-down 3/4 camera
+(not isometric, not side view), same chunky pixel drawing style, dark outlines and light from top-left as the
+first attached village image, but with the earthy, grimy, darker colors of the second attached image: muted
+browns, moss greens, wet grey stone, old wood, mud, low saturation. The only strong colors are magic and fire:
+purple necromancy, sickly green, torch orange, blue frost. Visible pixel grid, 16x16 tiles, characters about
+1.5 tiles tall. MANY players on screen at once (about 30 to 40 small adventurers in red-silver knight armor,
+blue wizard robes, purple skeleton necromancers, green-hooded archers, white-gold priests), spread around in
+small groups, fighting monsters with colorful spell effects. Players are the brightest, most colorful things on
+screen so they stand out from the dark ground.
+Diablo-style HUD: centered bottom bar of dark stone with gold trim, red health bar and blue mana bar side by
+side on top, a row of 10 small square skill slots under them; small portrait frame top-left; round minimap
+top-right. No readable words anywhere: no letters, no numbers, no logos, no watermark, no known characters.
+
+Dark forest right outside the village. Top-left corner shows the edge of the bright colorful village wall and gate (blue roofs, red banners) and a dirt road leading out; as the road goes down-right the colors get darker and grimier. Twisted trees, mud with cart tracks, broken fences, a burned wagon, a small camp with a bonfire. Groups of players fighting gray wolves and green goblins.</pre></details>
+      </article>
+      <article class="obj-card concept-card">
+        <div class="card-header">
+          <div class="card-num">B</div>
+          <div class="card-head-copy">
+            <div class="card-title">B — Cemitério Antigo (câmera de paisagem)</div>
+            <div class="card-desc"><code>art/rejeitadas/conceitos/B-cemiterio-antigo--camera-de-paisagem.png</code> · 1920×1080</div>
+          </div>
+          <span class="verdict-badge verdict-rejected">REJEITADA</span>
+        </div>
+        <div class="media-stage">
+          <img src="media/rejeitadas-conceitos/B-cemiterio-antigo--camera-de-paisagem.png" alt="Conceito panorâmico rejeitado do Cemitério Antigo com capela em ruínas, criptas e dezenas de bonecos minúsculos" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / modelo</dt><dd>Codex (modelo configurado no <code>config.toml</code>, pela ponte antiga — tarefa 34)</dd></div>
+          <div><dt>Veredito</dt><dd><strong>REJEITADA:</strong> câmera de paisagem (panorâmica), personagens minúsculos; não representa a visão real do jogador. Reaproveitada apenas como referência de motivos ambientais para os conceitos D–F.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/rejeitadas-conceitos/B-cemiterio-antigo--camera-de-paisagem.png" download="B-cemiterio-antigo--camera-de-paisagem.png">Baixar B-cemiterio-antigo--camera-de-paisagem.png</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Prompt completo (bloco de estilo + cena da tarefa 34)</summary><p class="prompt-note">Copiado de D:\AI Workshop\Codex\Bridge\feitas\34-minimmo-areas-conceito.md</p><pre>In-game screenshot mockup of a 2D pixel art online action RPG (Diablo-like mood), 16:9, top-down 3/4 camera
+(not isometric, not side view), same chunky pixel drawing style, dark outlines and light from top-left as the
+first attached village image, but with the earthy, grimy, darker colors of the second attached image: muted
+browns, moss greens, wet grey stone, old wood, mud, low saturation. The only strong colors are magic and fire:
+purple necromancy, sickly green, torch orange, blue frost. Visible pixel grid, 16x16 tiles, characters about
+1.5 tiles tall. MANY players on screen at once (about 30 to 40 small adventurers in red-silver knight armor,
+blue wizard robes, purple skeleton necromancers, green-hooded archers, white-gold priests), spread around in
+small groups, fighting monsters with colorful spell effects. Players are the brightest, most colorful things on
+screen so they stand out from the dark ground.
+Diablo-style HUD: centered bottom bar of dark stone with gold trim, red health bar and blue mana bar side by
+side on top, a row of 10 small square skill slots under them; small portrait frame top-left; round minimap
+top-right. No readable words anywhere: no letters, no numbers, no logos, no watermark, no known characters.
+
+Old cemetery and ruined chapel at night: crooked gravestones, iron fences, open crypts, purple will-o&#x27;-wisps, fog patches, dead trees. Players fighting skeletons and zombies coming out of graves; a large undead knight mini-boss with a purple aura in the middle and many players around it.</pre></details>
+      </article>
+      <article class="obj-card concept-card">
+        <div class="card-header">
+          <div class="card-num">C</div>
+          <div class="card-head-copy">
+            <div class="card-title">C — Minas Abandonadas (câmera de paisagem)</div>
+            <div class="card-desc"><code>art/rejeitadas/conceitos/C-minas-abandonadas--camera-de-paisagem.png</code> · 1920×1080</div>
+          </div>
+          <span class="verdict-badge verdict-rejected">REJEITADA</span>
+        </div>
+        <div class="media-stage">
+          <img src="media/rejeitadas-conceitos/C-minas-abandonadas--camera-de-paisagem.png" alt="Conceito panorâmico rejeitado das Minas Abandonadas com trilhos, lava, aranhas gigantes e personagens minúsculos" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / modelo</dt><dd>Codex (modelo configurado no <code>config.toml</code>, pela ponte antiga — tarefa 34)</dd></div>
+          <div><dt>Veredito</dt><dd><strong>REJEITADA:</strong> câmera de paisagem (panorâmica), personagens minúsculos; não representa a visão real do jogador. Reaproveitada apenas como referência de motivos ambientais para os conceitos D–F.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/rejeitadas-conceitos/C-minas-abandonadas--camera-de-paisagem.png" download="C-minas-abandonadas--camera-de-paisagem.png">Baixar C-minas-abandonadas--camera-de-paisagem.png</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Prompt completo (bloco de estilo + cena da tarefa 34)</summary><p class="prompt-note">Copiado de D:\AI Workshop\Codex\Bridge\feitas\34-minimmo-areas-conceito.md</p><pre>In-game screenshot mockup of a 2D pixel art online action RPG (Diablo-like mood), 16:9, top-down 3/4 camera
+(not isometric, not side view), same chunky pixel drawing style, dark outlines and light from top-left as the
+first attached village image, but with the earthy, grimy, darker colors of the second attached image: muted
+browns, moss greens, wet grey stone, old wood, mud, low saturation. The only strong colors are magic and fire:
+purple necromancy, sickly green, torch orange, blue frost. Visible pixel grid, 16x16 tiles, characters about
+1.5 tiles tall. MANY players on screen at once (about 30 to 40 small adventurers in red-silver knight armor,
+blue wizard robes, purple skeleton necromancers, green-hooded archers, white-gold priests), spread around in
+small groups, fighting monsters with colorful spell effects. Players are the brightest, most colorful things on
+screen so they stand out from the dark ground.
+Diablo-style HUD: centered bottom bar of dark stone with gold trim, red health bar and blue mana bar side by
+side on top, a row of 10 small square skill slots under them; small portrait frame top-left; round minimap
+top-right. No readable words anywhere: no letters, no numbers, no logos, no watermark, no known characters.
+
+Abandoned dwarven mine cave: rock walls, wooden support beams, rail tracks with minecarts, glowing orange lava cracks and blue crystals, lanterns. Players fighting giant cave spiders and stone golems; a wide open cavern so many players fit.</pre></details>
+      </article>
+      </div>
+    </section>
+
+    <section class="report-section" aria-labelledby="sec-sprites-aprovados">
+      <h2 id="sec-sprites-aprovados">4. Sprites 32×32 e chefe 64×64 (aprovados)</h2>
+      <p>
+        Seis classes jogáveis (paleta da vila, 32×32), três monstros e um chefe 64×64 (paleta da masmorra). Gerados pelo <strong>Codex GPT-6.2 Sol</strong>, convertidos com <code>tools/pixelize.py</code> e conferidos com <code>tools/check_art.py</code> (0 erros). Cada cartão mostra a prévia ampliada 8× com vizinho mais próximo e oferece download tanto da prévia 8× quanto do arquivo nativo 32×32 ou 64×64.
+      </p>
+      <div class="callout">
+        <strong>Observações visuais:</strong> o <strong>lobo</strong> saiu escuro, quase preto; o <strong>ogro</strong> saiu marrom-oliva em vez de verde por causa da paleta da masmorra; o <strong>necromante</strong> precisou da inclusão de 4 tons de roxo em <code>art/paleta.hex</code> para ser aprovado na v3.
+      </div>
+
+      <article class="obj-card asset-card">
+        <div class="card-header">
+          <div class="card-num">PR</div>
+          <div class="card-head-copy">
+            <div class="card-title">Prancha comparativa de sprites (8× sobre grama)</div>
+            <div class="card-desc"><code>art/rascunho/prancha-sprites-8x.png</code> · 2816×512</div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="prancha-stage">
+          <img src="media/sprites/prancha-sprites-8x.png" alt="Prancha comparativa com todos os 10 sprites aprovados ampliados 8× lado a lado sobre fundo de grama" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / pipeline</dt><dd>Composição por script com os sprites finais convertidos pelo <code>tools/pixelize.py</code></dd></div>
+          <div><dt>Veredito</dt><dd>Leitura conjunta das 6 classes, 3 monstros e chefe 64×64 na mesma escala (8×). Confirma o destaque colorido dos jogadores e a diferenciação do necromante v3 roxo.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/sprites/prancha-sprites-8x.png" download="prancha-sprites-8x.png">Baixar prancha-sprites-8x.png</a>
+        </div>
+      </article>
+
+      <div class="sprite-grid">
+      <article class="obj-card sprite-card">
+        <div class="card-header">
+          <div class="card-num">01</div>
+          <div class="card-head-copy">
+            <div class="card-title">Cavaleiro</div>
+            <div class="card-desc"><code>art/personagens/cavaleiro-frente.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="sprite-stage">
+          <img src="media/sprites/cavaleiro-frente.preview8x.png" alt="Sprite frontal do Cavaleiro ampliado 8× (256×256): armadura prata, capa e pluma vermelhas, escudo com leão dourado" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Escala / paleta</dt><dd>32×32 (corpo 16×24) · Paleta da vila</dd></div>
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol → <code>tools/pixelize.py</code> → <code>tools/check_art.py</code> (0 erros)</dd></div>
+          <div><dt>Veredito</dt><dd>APROVADA (2 tentativas). A face está visível e o dourado do escudo lê como um leão estilizado. 0 erros no check_art.py.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/sprites/cavaleiro-frente.preview8x.png" download="cavaleiro-frente.preview8x.png">Baixar prévia 8×</a>
+          <a class="media-download" href="media/sprites/cavaleiro-frente.png" download="cavaleiro-frente.png">Baixar nativo 32×32</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Tentativa 1 — REJEITADA (rosto e leão ilegíveis)</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval RPG, matching the attached village reference exactly: same crisp dark 1px-style outline, same light from top-left, same orthogonal top-down 3/4 camera (not isometric, not side view), same character palette and style as the small village guards, especially the red-plumed guard by the fountain.
+
+Subject: one front-facing idle chibi knight with silver armor, visible face with eyes under open helmet, red cape, red helmet plume, compact red shield with gold lion silhouette and a short silver sword held close upright.
+Size feel: complete silhouette fits 16x24 inside 32x32, proportion width:height about 2:3. Very simple chunky shapes, big head, few details, readable at 32x32. Make both eyes large enough to survive reduction. Face and both boots point directly toward viewer, slightly elevated orthogonal view showing helmet crown. Keep arms and accessories close so the main figure stays large.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no glow, no blur, no dithering.</pre></details>
+<details class="prompt-disclosure"><summary>Tentativa 2 (prompt final) — APROVADA</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval RPG, matching the attached village reference exactly: same crisp dark 1px-style outline, same light from top-left, same orthogonal top-down 3/4 camera (not isometric, not side view), same character palette and style as the small village guards, especially the red-plumed guard by the fountain.
+
+Subject: one front-facing idle chibi knight with silver armor, visible face with eyes under open helmet, red cape, red helmet plume, compact red shield with gold lion silhouette and a short silver sword held close upright.
+Size feel: complete silhouette fits 16x24 inside 32x32, proportion width:height about 2:3. Very simple chunky shapes, big head, few details, readable at 32x32. Make both eyes large enough to survive reduction. Face and both boots point directly toward viewer, slightly elevated orthogonal view showing helmet crown. Keep arms and accessories close so the main figure stays large.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no glow, no blur, no dithering.
+
+Redraw as a hand-placed grid of approximately 16 pixel columns by 24 pixel rows for the whole character, with each logical pixel visibly square and large, like the guards in the village. Prioritize a warm face block at least 5 logical pixels wide, TWO separate black square eyes with one peach pixel between, and a raised silver helmet brim. The eye pair is essential. Keep silver bright and neutral. Make the red shield broad enough for a 3x4 pixel stylized heraldic rampant lion (separate head, raised paw, bent tail, connected body), with plain red border. Use two simple separable boots and a clear broad red cape edge. No busy armor highlights.</pre></details>
+      </article>
+      <article class="obj-card sprite-card">
+        <div class="card-header">
+          <div class="card-num">02</div>
+          <div class="card-head-copy">
+            <div class="card-title">Mago</div>
+            <div class="card-desc"><code>art/personagens/mago-frente.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="sprite-stage">
+          <img src="media/sprites/mago-frente.preview8x.png" alt="Sprite frontal do Mago ampliado 8× (256×256): chapéu pontudo e manto azul-real com detalhes dourados, barba branca e cajado com orbe ciano" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Escala / paleta</dt><dd>32×32 (corpo 16×24) · Paleta da vila</dd></div>
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol → <code>tools/pixelize.py</code> → <code>tools/check_art.py</code> (0 erros)</dd></div>
+          <div><dt>Veredito</dt><dd>APROVADA (1 tentativa). Chapéu azul, barba branca e orbe azul distinguíveis. 0 erros no check_art.py.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/sprites/mago-frente.preview8x.png" download="mago-frente.preview8x.png">Baixar prévia 8×</a>
+          <a class="media-download" href="media/sprites/mago-frente.png" download="mago-frente.png">Baixar nativo 32×32</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Tentativa 1 (prompt final) — APROVADA</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval RPG, matching the first attached village reference exactly: same colorful medieval palette, same dark 1px-style outline, same light from top-left, same orthogonal top-down 3/4 camera (not isometric, not side view). Use the second attached image only as the character proportion template: same chibi proportions and head size as the attached knight, with head and feet at comparable heights after conversion.
+
+Subject: a chibi wizard in a royal blue pointed hat and royal blue robe with thick gold trim, long white beard, holding one dark staff crowned with a bright cyan-blue orb. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 16x24 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Build the face out of a broad peach strip with two dark eyes and a big white beard block. Keep the pointed hat compact so the face sits at the knight&#x27;s face height. Keep the orb adjacent to the hat and make blue the dominant color.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      <article class="obj-card sprite-card">
+        <div class="card-header">
+          <div class="card-num">03</div>
+          <div class="card-head-copy">
+            <div class="card-title">Necromante (v3 roxo)</div>
+            <div class="card-desc"><code>art/personagens/necromante-frente.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="sprite-stage">
+          <img src="media/sprites/necromante-frente.preview8x.png" alt="Sprite frontal do Necromante v3 ampliado 8× (256×256): crânio marfim, chama violeta clara e manto roxo saturado #7A3BB0" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Escala / paleta</dt><dd>32×32 (corpo 16×24) · Paleta da vila (com 4 roxos adicionados)</dd></div>
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol → <code>tools/pixelize.py</code> → <code>tools/check_art.py</code> (0 erros)</dd></div>
+          <div><dt>Veredito</dt><dd>APROVADA na v3 após inclusão de 4 roxos na paleta da vila (#2A1640, #4E2378, #7A3BB0, #B06EE8). O manto roxo saturado e a chama violeta clara distinguem o necromante do cavaleiro vermelho e do mago azul sobre grama; crânio e contorno legíveis a 32×32. 0 erros no check_art.py.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/sprites/necromante-frente.preview8x.png" download="necromante-frente.preview8x.png">Baixar prévia 8×</a>
+          <a class="media-download" href="media/sprites/necromante-frente.png" download="necromante-frente.png">Baixar nativo 32×32</a>
+        </div>
+        <details class="prompt-disclosure"><summary>v3 (prompt final após 4 roxos na paleta) — APROVADA</summary><pre>Generate one new pixel art sprite for a top-down 3/4 fantasy medieval RPG. Image 1 is the enlarged knight: use the same chibi proportions and head size as the attached knight, short compact body, forward-facing idle stance, both eyes visible, slightly viewed from above. Image 2 is the approved village: borrow its orthogonal camera, dark one-pixel-style outline, colorful chunky clusters and light from upper left. Subject: a skeleton necromancer standing idle, full body, large warm ivory bone-white skull with two dark sockets, a compact bright light-violet flame crest with hard-edged #B06EE8 clusters rising directly from the skull, and a short upright staff capped with a little ivory skull tucked immediately beside its body. The cloak is predominantly SATURATED PURPLE #7A3BB0 in broad clean areas across shoulders, chest and skirt, with #4E2378 shadows and #2A1640 deep folds, small gold edging and clasp. Keep its fabric visibly violet at a glance, with no blue or grey fabric. Fit the whole silhouette including staff and flames to a narrow 16:24 aspect ratio for downsampling to a 16x24 figure inside a 32x32 game sprite. Simple broad flat color clusters and a dark outline, clear stout chibi shape, feet visible, exactly one centered uncropped figure. Perfect uniform flat pure magenta #FF00FF background. No ground, cast shadow, gradient, glow bloom, blur, dithering, frame, text or watermark.</pre></details>
+<details class="prompt-disclosure"><summary>Histórico — Tentativa 2 (antes dos 4 roxos, resultou cinza-azulado)</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval RPG, matching the first attached village reference exactly: same colorful medieval palette, same dark 1px-style outline, same light from top-left, same orthogonal top-down 3/4 camera (not isometric, not side view). Use the second attached image only as the character proportion template: same chibi proportions and head size as the attached knight, with head and feet at comparable heights after conversion.
+
+Subject: a chibi skeleton necromancer with dusty desaturated violet robe and narrow gold trim, a chunky three-prong violet flame crown above its off-white skull, and a staff capped with a second very small skull. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 16x24 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Make robes predominantly muted lavender-grey (#6F6A6E) and blue-violet slate (#58657B) in large flat blocks; avoid bright magenta, black robes and orange except for a tiny gold trim. Give the flames a clear three-pronged solid silhouette in slate and mauve-gray. Make the main ivory skull broad with two square dark sockets. Match the knight&#x27;s face and feet heights.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+<details class="prompt-disclosure"><summary>Histórico — Tentativa 1 (roxo neutralizado)</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval RPG, matching the first attached village reference exactly: same colorful medieval palette, same dark 1px-style outline, same light from top-left, same orthogonal top-down 3/4 camera (not isometric, not side view). Use the second attached image only as the character proportion template: same chibi proportions and head size as the attached knight, with head and feet at comparable heights after conversion.
+
+Subject: a chibi skeleton necromancer with dark violet robe and thick gold trim, purple flames above the bare skull, and a staff capped with a small skull. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 16x24 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Make the main ivory skull broad with two square dark sockets; make the staff topper distinctly smaller than the skull of the necromancer. Use saturated violet clusters and one solid gold trim. Keep purple flame tips short and distinct so body and face align with the knight.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      <article class="obj-card sprite-card">
+        <div class="card-header">
+          <div class="card-num">04</div>
+          <div class="card-head-copy">
+            <div class="card-title">Arqueira</div>
+            <div class="card-desc"><code>art/personagens/arqueira-frente.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="sprite-stage">
+          <img src="media/sprites/arqueira-frente.preview8x.png" alt="Sprite frontal da Arqueira ampliado 8× (256×256): capuz verde-floresta, couro marrom, arco curto e aljava atrás do ombro" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Escala / paleta</dt><dd>32×32 (corpo 16×24) · Paleta da vila</dd></div>
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol → <code>tools/pixelize.py</code> → <code>tools/check_art.py</code> (0 erros)</dd></div>
+          <div><dt>Veredito</dt><dd>APROVADA (1 tentativa). Capuz verde e arco legíveis; aljava discreta atrás do ombro. 0 erros no check_art.py.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/sprites/arqueira-frente.preview8x.png" download="arqueira-frente.preview8x.png">Baixar prévia 8×</a>
+          <a class="media-download" href="media/sprites/arqueira-frente.png" download="arqueira-frente.png">Baixar nativo 32×32</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Tentativa 1 (prompt final) — APROVADA</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval RPG, matching the first attached village reference exactly: same colorful medieval palette, same dark 1px-style outline, same light from top-left, same orthogonal top-down 3/4 camera (not isometric, not side view). Use the second attached image only as the character proportion template: same chibi proportions and head size as the attached knight, with head and feet at comparable heights after conversion.
+
+Subject: a chibi female archer in a vivid forest-green hood and worn brown leather, holding a short curved bow with a dark string and wearing a quiver with arrow fletchings showing above one shoulder. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 16x24 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Green hood with a large clearly lit face opening, two bold eyes, green shoulder mantle and brown boots. Keep the bow close to the silhouette and the quiver tucked behind the shoulder.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      <article class="obj-card sprite-card">
+        <div class="card-header">
+          <div class="card-num">05</div>
+          <div class="card-head-copy">
+            <div class="card-title">Sacerdote</div>
+            <div class="card-desc"><code>art/personagens/sacerdote-frente.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="sprite-stage">
+          <img src="media/sprites/sacerdote-frente.preview8x.png" alt="Sprite frontal do Sacerdote ampliado 8× (256×256): manto branco-marfim com bordas douradas, maça compacta e livro sagrado" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Escala / paleta</dt><dd>32×32 (corpo 16×24) · Paleta da vila</dd></div>
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol → <code>tools/pixelize.py</code> → <code>tools/check_art.py</code> (0 erros)</dd></div>
+          <div><dt>Veredito</dt><dd>APROVADA (1 tentativa). Manto branco e dourado com maça e livro compactos. 0 erros no check_art.py.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/sprites/sacerdote-frente.preview8x.png" download="sacerdote-frente.preview8x.png">Baixar prévia 8×</a>
+          <a class="media-download" href="media/sprites/sacerdote-frente.png" download="sacerdote-frente.png">Baixar nativo 32×32</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Tentativa 1 (prompt final) — APROVADA</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval RPG, matching the first attached village reference exactly: same colorful medieval palette, same dark 1px-style outline, same light from top-left, same orthogonal top-down 3/4 camera (not isometric, not side view). Use the second attached image only as the character proportion template: same chibi proportions and head size as the attached knight, with head and feet at comparable heights after conversion.
+
+Subject: a chibi temple priest in a predominantly ivory-white robe with gold borders, holding a compact metal mace and a closed holy book with a gold emblem. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 16x24 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. White robe must be the biggest color block, use #F4F1E4 highlights and simple gold stripes. Make mace a single chunky metal head on a short handle, book a small block with a visible gold emblem. Exposed peach face and two boldly separated eyes.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      <article class="obj-card sprite-card">
+        <div class="card-header">
+          <div class="card-num">06</div>
+          <div class="card-head-copy">
+            <div class="card-title">Ladino</div>
+            <div class="card-desc"><code>art/personagens/ladino-frente.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="sprite-stage">
+          <img src="media/sprites/ladino-frente.preview8x.png" alt="Sprite frontal do Ladino ampliado 8× (256×256): traje cinza-carvão e preto, lenço cobrindo nariz e boca e duas adagas de prata" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Escala / paleta</dt><dd>32×32 (corpo 16×24) · Paleta da vila</dd></div>
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol → <code>tools/pixelize.py</code> → <code>tools/check_art.py</code> (0 erros)</dd></div>
+          <div><dt>Veredito</dt><dd>APROVADA (1 tentativa). Lenço, olhos expostos e duas lâminas separadas. 0 erros no check_art.py.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/sprites/ladino-frente.preview8x.png" download="ladino-frente.preview8x.png">Baixar prévia 8×</a>
+          <a class="media-download" href="media/sprites/ladino-frente.png" download="ladino-frente.png">Baixar nativo 32×32</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Tentativa 1 (prompt final) — APROVADA</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval RPG, matching the first attached village reference exactly: same colorful medieval palette, same dark 1px-style outline, same light from top-left, same orthogonal top-down 3/4 camera (not isometric, not side view). Use the second attached image only as the character proportion template: same chibi proportions and head size as the attached knight, with head and feet at comparable heights after conversion.
+
+Subject: a chibi rogue in charcoal gray and black leather gear with a dark scarf covering nose and mouth and one short silver dagger in each hand. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 16x24 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Use two prominent skin-tone and dark eye blocks above the scarf, two clearly separate silver blades held close on opposite sides, and large charcoal gray highlights to separate costume and black outline.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      <article class="obj-card sprite-card">
+        <div class="card-header">
+          <div class="card-num">07</div>
+          <div class="card-head-copy">
+            <div class="card-title">Lobo</div>
+            <div class="card-desc"><code>art/masmorra/monstros/lobo-frente.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="sprite-stage">
+          <img src="media/sprites/lobo-frente.preview8x.png" alt="Sprite frontal do Lobo ampliado 8× (256×256): pelagem escura quase preta e olhos amarelo-âmbar luminosos" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Escala / paleta</dt><dd>32×32 (corpo 28×20) · Paleta da masmorra</dd></div>
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol → <code>tools/pixelize.py</code> → <code>tools/check_art.py</code> (0 erros)</dd></div>
+          <div><dt>Veredito</dt><dd>APROVADA (3 tentativas). Olhos puxam para o âmbar na grade final; observação: o lobo saiu escuro, quase preto, na paleta da masmorra. 0 erros no check_art.py.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/sprites/lobo-frente.preview8x.png" download="lobo-frente.preview8x.png">Baixar prévia 8×</a>
+          <a class="media-download" href="media/sprites/lobo-frente.png" download="lobo-frente.png">Baixar nativo 32×32</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Tentativa 1 — REJEITADA (olhos amarelos ilegíveis)</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval action RPG (Diablo-like mood), same drawing style as the first attached village reference: same chunky shapes, same dark outline, same orthogonal top-down 3/4 camera (not isometric, not side view), same light from top-left. Mood and colors like the second attached image: earthy, grimy and dark, muted browns, moss greens, wet grey stone, old wood, mud; low saturation. Strong accents reserved for magic.
+
+Subject: a lean gray wolf with yellow eyes, standing idle on all fours, seen head-on, ears pricked. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 28x20 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. The camera elevation shows a short run of grey back behind the head, a distinct narrow muzzle, two upright pointed ears and the complete outline including paws. Two clear mustard-yellow eyes in separate dark sockets. Use a low, wide 28-by-20 silhouette without forcing an unnaturally bulky body.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+<details class="prompt-disclosure"><summary>Tentativa 2 — REJEITADA (olhos apagados)</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval action RPG (Diablo-like mood), same drawing style as the first attached village reference: same chunky shapes, same dark outline, same orthogonal top-down 3/4 camera (not isometric, not side view), same light from top-left. Mood and colors like the second attached image: earthy, grimy and dark, muted browns, moss greens, wet grey stone, old wood, mud; low saturation. Strong accents reserved for magic.
+
+Subject: a lean cool grey wolf with two unmistakable yellow eyes and a small black nose, standing still on all fours facing the camera head-on. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 28x20 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Use a very simple chunky sprite grid with a broad clear face of cool-grey shapes. Draw two yellow squares #E8B23A, at least two logical pixels each, on the front face on either side of the muzzle, low enough to be distinct from the ears. Use minimal fur texture and mostly flat neutral grays, visible torso and four paws; the slightly raised camera shows the shoulders and back.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+<details class="prompt-disclosure"><summary>Tentativa 3 (prompt final) — APROVADA</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval action RPG (Diablo-like mood), same drawing style as the first attached village reference: same chunky shapes, same dark outline, same orthogonal top-down 3/4 camera (not isometric, not side view), same light from top-left. Mood and colors like the second attached image: earthy, grimy and dark, muted browns, moss greens, wet grey stone, old wood, mud; low saturation. Strong accents reserved for magic.
+
+Subject: one lean charcoal-gray wolf monster staring straight at camera with enlarged vividly luminous yellow-gold magical eyes, rigid front-facing idle on four paws. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 28x20 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. The luminous eyes are the only magical accent: use two broad pure golden yellow (#F7DE7A and #E8B23A) rectangular eye blocks, separated by several gray nose-bridge pixels and surrounded by deep charcoal. No eye shading or outlines inside the yellow shapes. The yellow eye areas should fill about 15 percent of the face. Distinct large pointed triangular ears, narrow gray muzzle, tiny black nose, short torso visible behind the shoulders, four paws.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      <article class="obj-card sprite-card">
+        <div class="card-header">
+          <div class="card-num">08</div>
+          <div class="card-head-copy">
+            <div class="card-title">Goblin</div>
+            <div class="card-desc"><code>art/masmorra/monstros/goblin-frente.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="sprite-stage">
+          <img src="media/sprites/goblin-frente.preview8x.png" alt="Sprite frontal do Goblin ampliado 8× (256×256): cabeça verde-musgo com orelhas pontudas, túnica marrom e adaga enferrujada separada" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Escala / paleta</dt><dd>32×32 (corpo 16×20) · Paleta da masmorra</dd></div>
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol → <code>tools/pixelize.py</code> → <code>tools/check_art.py</code> (0 erros)</dd></div>
+          <div><dt>Veredito</dt><dd>APROVADA (2 tentativas). Cabeça verde e lâmina destacadas da túnica. 0 erros no check_art.py.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/sprites/goblin-frente.preview8x.png" download="goblin-frente.preview8x.png">Baixar prévia 8×</a>
+          <a class="media-download" href="media/sprites/goblin-frente.png" download="goblin-frente.png">Baixar nativo 32×32</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Tentativa 1 — REJEITADA (adaga fundida e rosto escuro)</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval action RPG (Diablo-like mood), same drawing style as the first attached village reference: same chunky shapes, same dark outline, same orthogonal top-down 3/4 camera (not isometric, not side view), same light from top-left. Mood and colors like the second attached image: earthy, grimy and dark, muted browns, moss greens, wet grey stone, old wood, mud; low saturation. Strong accents reserved for magic.
+
+Subject: a green goblin with wide pointed ears, short body, simple tattered brown tunic and a rusty iron dagger in one hand. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 16x20 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Big olive-green face with two distinct dark eyes and a broad nose that contrast on the face. Keep ears within 16-column silhouette. The broad rusty dagger sits close and is clearly distinct from the arm; mix a grey blade with a burnt-orange rust patch.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+<details class="prompt-disclosure"><summary>Tentativa 2 (prompt final) — APROVADA</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval action RPG (Diablo-like mood), same drawing style as the first attached village reference: same chunky shapes, same dark outline, same orthogonal top-down 3/4 camera (not isometric, not side view), same light from top-left. Mood and colors like the second attached image: earthy, grimy and dark, muted browns, moss greens, wet grey stone, old wood, mud; low saturation. Strong accents reserved for magic.
+
+Subject: one front-facing small olive-green goblin with pointed ears and a rusty dagger held upright tightly beside its torso, in a plain dark brown tunic. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 16x20 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Make its large head and ears visibly moss green (#518C29 and #518553) and slightly brighter than the body. Put two separate square near-black eyes on a flat green face, with one green pixel between. Use a clear four-step vertical silver-grey blade (#988D85) roughly two logical pixels wide, with exactly one red-brown rust cluster. A dark separator between the blade and tunic is essential.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      <article class="obj-card sprite-card">
+        <div class="card-header">
+          <div class="card-num">09</div>
+          <div class="card-head-copy">
+            <div class="card-title">Esqueleto</div>
+            <div class="card-desc"><code>art/masmorra/monstros/esqueleto-frente.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="sprite-stage">
+          <img src="media/sprites/esqueleto-frente.preview8x.png" alt="Sprite frontal do Esqueleto ampliado 8× (256×256): crânio marfim, costelas expostas e espada enferrujada na vertical" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Escala / paleta</dt><dd>32×32 (corpo 16×24) · Paleta da masmorra</dd></div>
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol → <code>tools/pixelize.py</code> → <code>tools/check_art.py</code> (0 erros)</dd></div>
+          <div><dt>Veredito</dt><dd>APROVADA (1 tentativa). Crânio, costelas e espada em blocos legíveis. 0 erros no check_art.py.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/sprites/esqueleto-frente.preview8x.png" download="esqueleto-frente.preview8x.png">Baixar prévia 8×</a>
+          <a class="media-download" href="media/sprites/esqueleto-frente.png" download="esqueleto-frente.png">Baixar nativo 32×32</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Tentativa 1 (prompt final) — APROVADA</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval action RPG (Diablo-like mood), same drawing style as the first attached village reference: same chunky shapes, same dark outline, same orthogonal top-down 3/4 camera (not isometric, not side view), same light from top-left. Mood and colors like the second attached image: earthy, grimy and dark, muted browns, moss greens, wet grey stone, old wood, mud; low saturation. Strong accents reserved for magic.
+
+Subject: one walking-dead skeleton standing still with an aged ivory skull and exposed rib cage, armed with a rusty sword. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 16x24 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Show a large plain ivory skull with two dark square sockets, chunky rib cage with three large alternating bone and dark bands, and two bony legs and feet. Keep the sword upright close to one forearm, with distinct partly rusty blade and simple crossguard. The skull and bones contrast with dark warm shadows.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      <article class="obj-card sprite-card">
+        <div class="card-header">
+          <div class="card-num">10</div>
+          <div class="card-head-copy">
+            <div class="card-title">Ogro Bastião (chefe 64×64)</div>
+            <div class="card-desc"><code>art/masmorra/chefes/ogro-bastiao-frente.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-approved">APROVADA</span>
+        </div>
+        <div class="sprite-stage">
+          <img src="media/sprites/ogro-bastiao-frente.preview8x.png" alt="Sprite frontal do chefe Ogro Bastião ampliado 8× (512×512): corpo musculoso marrom-oliva, ombreiras de couro, clava espinhosa e fivela de caveira" loading="lazy">
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Escala / paleta</dt><dd>64×64 (corpo 48×56) · Paleta da masmorra</dd></div>
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol → <code>tools/pixelize.py</code> → <code>tools/check_art.py</code> (0 erros)</dd></div>
+          <div><dt>Veredito</dt><dd>APROVADA (1 tentativa). Clava espinhosa, ombreiras e fivela de caveira distinguíveis; observação: o ogro saiu marrom-oliva em vez de verde por causa da paleta da masmorra. 0 erros no check_art.py.</dd></div>
+        </dl>
+        <div class="card-actions">
+          <a class="media-download" href="media/sprites/ogro-bastiao-frente.preview8x.png" download="ogro-bastiao-frente.preview8x.png">Baixar prévia 8×</a>
+          <a class="media-download" href="media/sprites/ogro-bastiao-frente.png" download="ogro-bastiao-frente.png">Baixar nativo 64×64</a>
+        </div>
+        <details class="prompt-disclosure"><summary>Tentativa 1 (prompt final) — APROVADA</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval action RPG (Diablo-like mood), same drawing style as the first attached village reference: same chunky shapes, same dark outline, same orthogonal top-down 3/4 camera (not isometric, not side view), same light from top-left. Mood and colors like the second attached image: earthy, grimy and dark, muted browns, moss greens, wet grey stone, old wood, mud; low saturation. Strong accents reserved for magic.
+
+Subject: a huge muscular moss-green ogre bastion boss idle with both feet planted, a hefty spiked wooden club held upright close to his shoulder, brown leather pauldrons, and a heavy belt with an ivory skull buckle. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 48x56 silhouette inside 64x64; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Use a massive dark outlined upper body, distinct face with two eyes and lower tusks, thick leather on both shoulders, and a chunky pale skull at the waist. The club should clearly show several large metal spikes and fit inside the overall silhouette without shrinking the boss. High contrast within the restrained greens and warm browns.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      </div>
+    </section>
+
+    <section class="report-section" aria-labelledby="sec-sprites-rejeitados">
+      <h2 id="sec-sprites-rejeitados">5. Sprites rejeitados</h2>
+      <p>
+        Todas as tentativas descartadas em <code>art/rejeitadas/sprites/</code>, com o motivo registrado no nome do arquivo e em <code>prompts.md</code>. Inclui o <strong>necromante cinza</strong> (<code>necromante-frente--sem-roxo-na-paleta.png</code>), exibido em prévia 8× gerada com Pillow (<em>nearest neighbor</em>) dentro da pasta do cartão.
+      </p>
+      <div class="sprite-grid">
+      <article class="obj-card sprite-card rejected-card">
+        <div class="card-header">
+          <div class="card-num">R1</div>
+          <div class="card-head-copy">
+            <div class="card-title">Cavaleiro — rosto e leão ilegíveis</div>
+            <div class="card-desc"><code>art/rejeitadas/sprites/cavaleiro-frente--rosto-e-leao-ilegiveis.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-rejected">REJEITADA</span>
+        </div>
+        <div class="variants">
+          <div class="variant">
+            <div class="var-label">Convertido 32×32 (prévia 8×)</div>
+            <div class="sprite-stage compact"><img src="media/rejeitadas-sprites/cavaleiro-frente--rosto-e-leao-ilegiveis.preview8x.png" alt="Cavaleiro rejeitado convertido 32×32 ampliado 8×: rosto indistinto e leão ilegível no escudo" loading="lazy"></div>
+            <div class="card-actions"><a class="media-download" href="media/rejeitadas-sprites/cavaleiro-frente--rosto-e-leao-ilegiveis.preview8x.png" download="cavaleiro-frente--rosto-e-leao-ilegiveis.preview8x.png">Baixar 8×</a><a class="media-download" href="media/rejeitadas-sprites/cavaleiro-frente--rosto-e-leao-ilegiveis.convertido.png" download="cavaleiro-frente--rosto-e-leao-ilegiveis.convertido.png">Baixar 32×32</a></div>
+          </div>
+          <div class="variant">
+            <div class="var-label">Original bruto (IA)</div>
+            <div class="sprite-stage compact raw"><img src="media/rejeitadas-sprites/cavaleiro-frente--rosto-e-leao-ilegiveis.png" alt="Original bruto gerado pela IA para a tentativa 1 do Cavaleiro (1254×1254)" loading="lazy"></div>
+            <div class="card-actions"><a class="media-download" href="media/rejeitadas-sprites/cavaleiro-frente--rosto-e-leao-ilegiveis.png" download="cavaleiro-frente--rosto-e-leao-ilegiveis.png">Baixar original</a></div>
+          </div>
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol + <code>tools/pixelize.py</code></dd></div>
+          <div><dt>Motivo / veredito</dt><dd>Rosto e leão do escudo ilegíveis após redução para a grade 32×32 (tentativa 1 do cavaleiro; corrigido na tentativa 2 com grade explícita 16×24 e bloco de rosto de 5 px).</dd></div>
+        </dl>
+        <details class="prompt-disclosure"><summary>Prompt da tentativa 1 (rejeitada)</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval RPG, matching the attached village reference exactly: same crisp dark 1px-style outline, same light from top-left, same orthogonal top-down 3/4 camera (not isometric, not side view), same character palette and style as the small village guards, especially the red-plumed guard by the fountain.
+
+Subject: one front-facing idle chibi knight with silver armor, visible face with eyes under open helmet, red cape, red helmet plume, compact red shield with gold lion silhouette and a short silver sword held close upright.
+Size feel: complete silhouette fits 16x24 inside 32x32, proportion width:height about 2:3. Very simple chunky shapes, big head, few details, readable at 32x32. Make both eyes large enough to survive reduction. Face and both boots point directly toward viewer, slightly elevated orthogonal view showing helmet crown. Keep arms and accessories close so the main figure stays large.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no glow, no blur, no dithering.</pre></details>
+      </article>
+      <article class="obj-card sprite-card rejected-card">
+        <div class="card-header">
+          <div class="card-num">R2</div>
+          <div class="card-head-copy">
+            <div class="card-title">Goblin — adaga fundida e rosto escuro</div>
+            <div class="card-desc"><code>art/rejeitadas/sprites/goblin-frente--adaga-fundida-e-rosto-escuro.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-rejected">REJEITADA</span>
+        </div>
+        <div class="variants">
+          <div class="variant">
+            <div class="var-label">Convertido 32×32 (prévia 8×)</div>
+            <div class="sprite-stage compact"><img src="media/rejeitadas-sprites/goblin-frente--adaga-fundida-e-rosto-escuro.preview8x.png" alt="Goblin rejeitado convertido 32×32 ampliado 8×: adaga fundida à túnica e rosto escuro" loading="lazy"></div>
+            <div class="card-actions"><a class="media-download" href="media/rejeitadas-sprites/goblin-frente--adaga-fundida-e-rosto-escuro.preview8x.png" download="goblin-frente--adaga-fundida-e-rosto-escuro.preview8x.png">Baixar 8×</a><a class="media-download" href="media/rejeitadas-sprites/goblin-frente--adaga-fundida-e-rosto-escuro.convertido.png" download="goblin-frente--adaga-fundida-e-rosto-escuro.convertido.png">Baixar 32×32</a></div>
+          </div>
+          <div class="variant">
+            <div class="var-label">Original bruto (IA)</div>
+            <div class="sprite-stage compact raw"><img src="media/rejeitadas-sprites/goblin-frente--adaga-fundida-e-rosto-escuro.png" alt="Original bruto gerado pela IA para a tentativa 1 do Goblin (1254×1254)" loading="lazy"></div>
+            <div class="card-actions"><a class="media-download" href="media/rejeitadas-sprites/goblin-frente--adaga-fundida-e-rosto-escuro.png" download="goblin-frente--adaga-fundida-e-rosto-escuro.png">Baixar original</a></div>
+          </div>
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol + <code>tools/pixelize.py</code></dd></div>
+          <div><dt>Motivo / veredito</dt><dd>Adaga fundida com o braço/túnica e rosto excessivamente escuro na paleta da masmorra (tentativa 1 do goblin; corrigido na tentativa 2 com separador escuro e tons verde-musgo mais claros).</dd></div>
+        </dl>
+        <details class="prompt-disclosure"><summary>Prompt da tentativa 1 (rejeitada)</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval action RPG (Diablo-like mood), same drawing style as the first attached village reference: same chunky shapes, same dark outline, same orthogonal top-down 3/4 camera (not isometric, not side view), same light from top-left. Mood and colors like the second attached image: earthy, grimy and dark, muted browns, moss greens, wet grey stone, old wood, mud; low saturation. Strong accents reserved for magic.
+
+Subject: a green goblin with wide pointed ears, short body, simple tattered brown tunic and a rusty iron dagger in one hand. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 16x20 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Big olive-green face with two distinct dark eyes and a broad nose that contrast on the face. Keep ears within 16-column silhouette. The broad rusty dagger sits close and is clearly distinct from the arm; mix a grey blade with a burnt-orange rust patch.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      <article class="obj-card sprite-card rejected-card">
+        <div class="card-header">
+          <div class="card-num">R3</div>
+          <div class="card-head-copy">
+            <div class="card-title">Lobo (tentativa 1) — olhos amarelos ilegíveis</div>
+            <div class="card-desc"><code>art/rejeitadas/sprites/lobo-frente--olhos-amarelos-ilegiveis.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-rejected">REJEITADA</span>
+        </div>
+        <div class="variants">
+          <div class="variant">
+            <div class="var-label">Convertido 32×32 (prévia 8×)</div>
+            <div class="sprite-stage compact"><img src="media/rejeitadas-sprites/lobo-frente--olhos-amarelos-ilegiveis.preview8x.png" alt="Lobo tentativa 1 convertido 32×32 ampliado 8×: olhos amarelos ilegíveis" loading="lazy"></div>
+            <div class="card-actions"><a class="media-download" href="media/rejeitadas-sprites/lobo-frente--olhos-amarelos-ilegiveis.preview8x.png" download="lobo-frente--olhos-amarelos-ilegiveis.preview8x.png">Baixar 8×</a><a class="media-download" href="media/rejeitadas-sprites/lobo-frente--olhos-amarelos-ilegiveis.convertido.png" download="lobo-frente--olhos-amarelos-ilegiveis.convertido.png">Baixar 32×32</a></div>
+          </div>
+          <div class="variant">
+            <div class="var-label">Original bruto (IA)</div>
+            <div class="sprite-stage compact raw"><img src="media/rejeitadas-sprites/lobo-frente--olhos-amarelos-ilegiveis.png" alt="Original bruto gerado pela IA para a tentativa 1 do Lobo (1586×992)" loading="lazy"></div>
+            <div class="card-actions"><a class="media-download" href="media/rejeitadas-sprites/lobo-frente--olhos-amarelos-ilegiveis.png" download="lobo-frente--olhos-amarelos-ilegiveis.png">Baixar original</a></div>
+          </div>
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol + <code>tools/pixelize.py</code></dd></div>
+          <div><dt>Motivo / veredito</dt><dd>Olhos amarelos pequenos demais desapareceram ao reduzir e prender à paleta da masmorra (tentativa 1 do lobo).</dd></div>
+        </dl>
+        <details class="prompt-disclosure"><summary>Prompt da tentativa 1 (rejeitada)</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval action RPG (Diablo-like mood), same drawing style as the first attached village reference: same chunky shapes, same dark outline, same orthogonal top-down 3/4 camera (not isometric, not side view), same light from top-left. Mood and colors like the second attached image: earthy, grimy and dark, muted browns, moss greens, wet grey stone, old wood, mud; low saturation. Strong accents reserved for magic.
+
+Subject: a lean gray wolf with yellow eyes, standing idle on all fours, seen head-on, ears pricked. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 28x20 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. The camera elevation shows a short run of grey back behind the head, a distinct narrow muzzle, two upright pointed ears and the complete outline including paws. Two clear mustard-yellow eyes in separate dark sockets. Use a low, wide 28-by-20 silhouette without forcing an unnaturally bulky body.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      <article class="obj-card sprite-card rejected-card">
+        <div class="card-header">
+          <div class="card-num">R4</div>
+          <div class="card-head-copy">
+            <div class="card-title">Lobo (tentativa 2) — olhos apagados</div>
+            <div class="card-desc"><code>art/rejeitadas/sprites/lobo-frente--segunda-tentativa-olhos-apagados.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-rejected">REJEITADA</span>
+        </div>
+        <div class="variants">
+          <div class="variant">
+            <div class="var-label">Convertido 32×32 (prévia 8×)</div>
+            <div class="sprite-stage compact"><img src="media/rejeitadas-sprites/lobo-frente--segunda-tentativa-olhos-apagados.preview8x.png" alt="Lobo tentativa 2 convertido 32×32 ampliado 8×: olhos ainda apagados" loading="lazy"></div>
+            <div class="card-actions"><a class="media-download" href="media/rejeitadas-sprites/lobo-frente--segunda-tentativa-olhos-apagados.preview8x.png" download="lobo-frente--segunda-tentativa-olhos-apagados.preview8x.png">Baixar 8×</a><a class="media-download" href="media/rejeitadas-sprites/lobo-frente--segunda-tentativa-olhos-apagados.convertido.png" download="lobo-frente--segunda-tentativa-olhos-apagados.convertido.png">Baixar 32×32</a></div>
+          </div>
+          <div class="variant">
+            <div class="var-label">Original bruto (IA)</div>
+            <div class="sprite-stage compact raw"><img src="media/rejeitadas-sprites/lobo-frente--segunda-tentativa-olhos-apagados.png" alt="Original bruto gerado pela IA para a tentativa 2 do Lobo (1254×1254)" loading="lazy"></div>
+            <div class="card-actions"><a class="media-download" href="media/rejeitadas-sprites/lobo-frente--segunda-tentativa-olhos-apagados.png" download="lobo-frente--segunda-tentativa-olhos-apagados.png">Baixar original</a></div>
+          </div>
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol + <code>tools/pixelize.py</code></dd></div>
+          <div><dt>Motivo / veredito</dt><dd>Mesmo pedindo quadrados amarelos #E8B23A, os olhos continuaram apagados na conversão 32×32 (tentativa 2 do lobo; resolvido na tentativa 3 com olhos ampliados ocupando ~15% da face).</dd></div>
+        </dl>
+        <details class="prompt-disclosure"><summary>Prompt da tentativa 2 (rejeitada)</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval action RPG (Diablo-like mood), same drawing style as the first attached village reference: same chunky shapes, same dark outline, same orthogonal top-down 3/4 camera (not isometric, not side view), same light from top-left. Mood and colors like the second attached image: earthy, grimy and dark, muted browns, moss greens, wet grey stone, old wood, mud; low saturation. Strong accents reserved for magic.
+
+Subject: a lean cool grey wolf with two unmistakable yellow eyes and a small black nose, standing still on all fours facing the camera head-on. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 28x20 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Use a very simple chunky sprite grid with a broad clear face of cool-grey shapes. Draw two yellow squares #E8B23A, at least two logical pixels each, on the front face on either side of the muzzle, low enough to be distinct from the ears. Use minimal fur texture and mostly flat neutral grays, visible torso and four paws; the slightly raised camera shows the shoulders and back.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      <article class="obj-card sprite-card rejected-card">
+        <div class="card-header">
+          <div class="card-num">R5</div>
+          <div class="card-head-copy">
+            <div class="card-title">Necromante (tentativa 1) — roxo neutralizado</div>
+            <div class="card-desc"><code>art/rejeitadas/sprites/necromante-frente--roxo-neutralizado.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-rejected">REJEITADA</span>
+        </div>
+        <div class="variants">
+          <div class="variant">
+            <div class="var-label">Convertido 32×32 (prévia 8×)</div>
+            <div class="sprite-stage compact"><img src="media/rejeitadas-sprites/necromante-frente--roxo-neutralizado.preview8x.png" alt="Necromante tentativa 1 convertido 32×32 ampliado 8×: manto roxo neutralizado em cinza-azulado" loading="lazy"></div>
+            <div class="card-actions"><a class="media-download" href="media/rejeitadas-sprites/necromante-frente--roxo-neutralizado.preview8x.png" download="necromante-frente--roxo-neutralizado.preview8x.png">Baixar 8×</a><a class="media-download" href="media/rejeitadas-sprites/necromante-frente--roxo-neutralizado.convertido.png" download="necromante-frente--roxo-neutralizado.convertido.png">Baixar 32×32</a></div>
+          </div>
+          <div class="variant">
+            <div class="var-label">Original bruto (IA)</div>
+            <div class="sprite-stage compact raw"><img src="media/rejeitadas-sprites/necromante-frente--roxo-neutralizado.png" alt="Original bruto gerado pela IA para a tentativa 1 do Necromante (1254×1254)" loading="lazy"></div>
+            <div class="card-actions"><a class="media-download" href="media/rejeitadas-sprites/necromante-frente--roxo-neutralizado.png" download="necromante-frente--roxo-neutralizado.png">Baixar original</a></div>
+          </div>
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol + <code>tools/pixelize.py</code></dd></div>
+          <div><dt>Motivo / veredito</dt><dd>O roxo do manto e das chamas foi neutralizado para cinza-azulado durante a quantização porque a paleta da vila ainda não tinha tons violeta (tentativa 1 do necromante).</dd></div>
+        </dl>
+        <details class="prompt-disclosure"><summary>Prompt da tentativa 1 (rejeitada)</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval RPG, matching the first attached village reference exactly: same colorful medieval palette, same dark 1px-style outline, same light from top-left, same orthogonal top-down 3/4 camera (not isometric, not side view). Use the second attached image only as the character proportion template: same chibi proportions and head size as the attached knight, with head and feet at comparable heights after conversion.
+
+Subject: a chibi skeleton necromancer with dark violet robe and thick gold trim, purple flames above the bare skull, and a staff capped with a small skull. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 16x24 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Make the main ivory skull broad with two square dark sockets; make the staff topper distinctly smaller than the skull of the necromancer. Use saturated violet clusters and one solid gold trim. Keep purple flame tips short and distinct so body and face align with the knight.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      <article class="obj-card sprite-card rejected-card">
+        <div class="card-header">
+          <div class="card-num">R6</div>
+          <div class="card-head-copy">
+            <div class="card-title">Necromante cinza (tentativa 2) — sem roxo na paleta</div>
+            <div class="card-desc"><code>art/rejeitadas/sprites/necromante-frente--sem-roxo-na-paleta.png</code></div>
+          </div>
+          <span class="verdict-badge verdict-rejected">REJEITADA</span>
+        </div>
+        <div class="sprite-stage">
+          <img src="media/rejeitadas-sprites/necromante-frente--sem-roxo-na-paleta.preview8x.png" alt="Necromante cinza 32×32 ampliado 8× (nearest neighbor): manto e chamas em cinza-azulado por falta de roxo na paleta da vila" loading="lazy">
+        </div>
+        <div class="card-actions">
+          <a class="media-download" href="media/rejeitadas-sprites/necromante-frente--sem-roxo-na-paleta.preview8x.png" download="necromante-frente--sem-roxo-na-paleta.preview8x.png">Baixar prévia 8× (gerada)</a>
+          <a class="media-download" href="media/rejeitadas-sprites/necromante-frente--sem-roxo-na-paleta.png" download="necromante-frente--sem-roxo-na-paleta.png">Baixar nativo 32×32</a>
+        </div>
+        <dl class="meta-grid">
+          <div><dt>IA / pipeline</dt><dd>Codex GPT-6.2 Sol + <code>tools/pixelize.py</code></dd></div>
+          <div><dt>Motivo / veredito</dt><dd>A paleta da vila não tinha roxo; foram acrescentados 4 roxos (#2A1640, #4E2378, #7A3BB0, #B06EE8) e o sprite foi refeito (v3).</dd></div>
+        </dl>
+        <details class="prompt-disclosure"><summary>Prompt da tentativa 2 (antes da inclusão dos 4 roxos)</summary><pre>Pixel art sprite for a top-down 3/4 fantasy medieval RPG, matching the first attached village reference exactly: same colorful medieval palette, same dark 1px-style outline, same light from top-left, same orthogonal top-down 3/4 camera (not isometric, not side view). Use the second attached image only as the character proportion template: same chibi proportions and head size as the attached knight, with head and feet at comparable heights after conversion.
+
+Subject: a chibi skeleton necromancer with dusty desaturated violet robe and narrow gold trim, a chunky three-prong violet flame crown above its off-white skull, and a staff capped with a second very small skull. Front-facing idle pose looking straight toward the camera. Both sides of the face are visible and stance reads head-on, slightly viewed from above.
+Size feel: 16x24 silhouette inside 32x32; very simple chunky shapes, big head, few details, readable at native sprite size. The entire silhouette should fill the target body aspect ratio, keep equipment tucked in. Make robes predominantly muted lavender-grey (#6F6A6E) and blue-violet slate (#58657B) in large flat blocks; avoid bright magenta, black robes and orange except for a tiny gold trim. Give the flames a clear three-pronged solid silhouette in slate and mauve-gray. Make the main ivory skull broad with two square dark sockets. Match the knight&#x27;s face and feet heights.
+
+ONE single subject, centered, full body visible, nothing cropped.
+Background: uniform solid flat pure magenta #FF00FF, no ground, no cast shadow on the background, no frame, no text, no watermark.
+Flat colors, hard edges, no gradients, no blur, no dithering. Any magical light must be represented by hard-edged adjacent color blocks without atmospheric bloom.</pre></details>
+      </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
