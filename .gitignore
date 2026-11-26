@@ -1,4 +1,4 @@
 .godot/
-*.import.tmp
+/android/
 __pycache__/
 *.pyc
