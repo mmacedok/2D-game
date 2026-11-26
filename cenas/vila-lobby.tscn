@@ -1,0 +1,148 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/mapas/vila-lobby.png" id="1_mapa"]
+[ext_resource type="Script" path="res://cenas/jogador.gd" id="2_jogador"]
+[ext_resource type="Texture2D" path="res://assets/personagens/cavaleiro.png" id="3_sprite"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pes"]
+radius = 4.0
+
+[node name="VilaLobby" type="Node2D"]
+
+[node name="Mapa" type="TextureRect" parent="."]
+offset_right = 640.0
+offset_bottom = 360.0
+mouse_filter = 2
+texture = ExtResource("1_mapa")
+expand_mode = 1
+
+[node name="Obstaculos" type="StaticBody2D" parent="."]
+
+[node name="LimiteNorte" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(0, -12, 640, -12, 640, 0, 0, 0)
+
+[node name="LimiteSul" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(0, 360, 640, 360, 640, 372, 0, 372)
+
+[node name="LimiteOeste" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(-12, 0, 0, 0, 0, 360, -12, 360)
+
+[node name="LimiteLeste" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(640, 0, 652, 0, 652, 360, 640, 360)
+
+[node name="FlorestaNoroeste" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(0, 0, 303, 0, 303, 26, 0, 26)
+
+[node name="FlorestaNordeste" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(335, 0, 640, 0, 640, 26, 335, 26)
+
+[node name="BosqueOeste" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(0, 92, 24, 92, 24, 360, 0, 360)
+
+[node name="BosqueLeste" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(624, 120, 640, 120, 640, 360, 624, 360)
+
+[node name="MuralhaOeste" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(0, 310, 283, 310, 283, 360, 0, 360)
+
+[node name="MuralhaLeste" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(353, 310, 640, 310, 640, 360, 353, 360)
+
+[node name="Estatua" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(297, 129, 345, 129, 345, 195, 297, 195)
+
+[node name="Ferreiro" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(161, 70, 247, 70, 247, 134, 161, 134)
+
+[node name="Taverna" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(392, 71, 475, 71, 475, 135, 392, 135)
+
+[node name="Missoes" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(161, 194, 243, 194, 243, 261, 161, 261)
+
+[node name="Fantasia" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(395, 193, 476, 193, 476, 261, 395, 261)
+
+[node name="CasaOeste1" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(25, 57, 71, 57, 71, 95, 25, 95)
+
+[node name="CasaOeste2" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(83, 44, 125, 44, 125, 77, 83, 77)
+
+[node name="CasaOeste3" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(164, 27, 206, 27, 206, 61, 164, 61)
+
+[node name="CasaOeste4" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(30, 211, 78, 211, 78, 247, 30, 247)
+
+[node name="CasaOeste5" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(58, 249, 126, 249, 126, 290, 58, 290)
+
+[node name="CasaLeste1" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(467, 29, 506, 29, 506, 64, 467, 64)
+
+[node name="CasaLeste2" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(540, 46, 593, 46, 593, 90, 540, 90)
+
+[node name="CasaLeste3" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(590, 86, 635, 86, 635, 126, 590, 126)
+
+[node name="CasaLeste4" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(553, 218, 603, 218, 603, 258, 553, 258)
+
+[node name="CasaLeste5" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(514, 253, 572, 253, 572, 297, 514, 297)
+
+[node name="Barraca1" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(511, 140, 554, 140, 554, 169, 511, 169)
+
+[node name="Barraca2" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(553, 149, 592, 149, 592, 182, 553, 182)
+
+[node name="Barraca3" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(585, 159, 624, 159, 624, 196, 585, 196)
+
+[node name="Fogueira" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(58, 161, 78, 161, 78, 173, 58, 173)
+
+[node name="Banco1" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(43, 144, 67, 144, 67, 155, 43, 155)
+
+[node name="Banco2" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(74, 142, 95, 142, 95, 155, 74, 155)
+
+[node name="Banco3" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(35, 170, 55, 170, 55, 182, 35, 182)
+
+[node name="Banco4" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(70, 173, 94, 173, 94, 186, 70, 186)
+
+[node name="Poste1" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(137, 112, 145, 112, 145, 136, 137, 136)
+
+[node name="Poste2" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(251, 95, 261, 95, 261, 120, 251, 120)
+
+[node name="Poste3" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(374, 103, 384, 103, 384, 121, 374, 121)
+
+[node name="Poste4" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(495, 110, 505, 110, 505, 136, 495, 136)
+
+[node name="Poste5" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(138, 163, 148, 163, 148, 197, 138, 197)
+
+[node name="Poste6" type="CollisionPolygon2D" parent="Obstaculos"]
+polygon = PackedVector2Array(490, 163, 503, 163, 503, 198, 490, 198)
+
+[node name="Jogador" type="CharacterBody2D" parent="."]
+position = Vector2(320, 277)
+motion_mode = 1
+script = ExtResource("2_jogador")
+
+[node name="Sprite2D" type="Sprite2D" parent="Jogador"]
+position = Vector2(0, -13)
+texture = ExtResource("3_sprite")
+
+[node name="Pes" type="CollisionShape2D" parent="Jogador"]
+shape = SubResource("CircleShape2D_pes")
