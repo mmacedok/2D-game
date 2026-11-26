@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/mapas/vila-lobby.png" id="1_mapa"]
+
+[node name="VilaLobby" type="Node2D"]
+
+[node name="Mapa" type="TextureRect" parent="."]
+offset_right = 640.0
+offset_bottom = 360.0
+mouse_filter = 2
+texture = ExtResource("1_mapa")
+expand_mode = 1
+stretch_mode = 5

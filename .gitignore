@@ -2,3 +2,9 @@
 /android/
 __pycache__/
 *.pyc
+
+# Local backups and portable Godot editor (keep on this computer).
+/*.rar
+/*.zip
+/Godot-Lobby/Editor/
+/godot-transfer-tmp/

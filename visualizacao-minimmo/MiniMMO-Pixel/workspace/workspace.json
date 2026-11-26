@@ -1,0 +1,21 @@
+{
+  "entities": [
+    {
+      "id": "minimmo-pixel",
+      "title": "Mini-MMO pixel: arte e conceitos",
+      "description": "Referência de estilo aprovada, paletas (44 + 48 cores), conceitos na visão do jogador (D–F), conceitos panorâmicos rejeitados (A–C) e sprites frontais 32×32 / chefe 64×64 (aprovados e rejeitados).",
+      "type": "group",
+      "category": "project",
+      "created": "2026-11-26",
+      "updated": "2026-11-26",
+      "folder": "minimmo-pixel",
+      "status": "active",
+      "steps": [
+        {
+          "name": "Arte e conceitos",
+          "path": "report.html"
+        }
+      ]
+    }
+  ]
+}
