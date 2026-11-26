@@ -21,7 +21,13 @@ em WASD ou setas. Resolução interna 640×360, escala inteira, filtro Nearest.
 - [docs/PLANO-versao-do-amigo.md](docs/PLANO-versao-do-amigo.md): o plano ampliado pelo Codex do amigo. Ele ainda
   fala em Phaser; a stack valendo é a do `PLANO.md` (Godot 4).
 
-Antes de mandar arte: `python tools/check_art.py` precisa dar 0 erros.
+## Para quem trabalha com IA
+
+A IA (Codex, ChatGPT, Claude, Gemini) precisa ler o **`AGENTS.md`** no começo de toda tarefa: a seção 0 diz
+como trabalhar (branch e PR, nunca direto na `main`) e quando o trabalho está pronto.
+
+Antes de qualquer PR: `python tools/verificar.py --captura` precisa terminar com **TUDO CERTO**. O GitHub
+roda a mesma checagem em todo PR.
 
 As skills em `.agents/skills/`, `processes/` e `workspace/_shared/` são do
 [Mr. Mak Workspace](https://github.com/witnesstodark/mr-mak-workspace) (MIT, ver `LICENSE` e `THIRD_PARTY_NOTICES.md`).

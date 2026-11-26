@@ -2,6 +2,7 @@
 /android/
 __pycache__/
 *.pyc
+build/
 
 # Local backups and portable Godot editor (keep on this computer).
 /*.rar

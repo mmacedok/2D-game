@@ -1,6 +1,53 @@
-# Regras para o Codex: arte e código do mini-MMO pixel
+# Jogo 2D: regras obrigatórias para qualquer IA (Codex, ChatGPT, Claude, Gemini)
 
-Leia este arquivo inteiro antes de gerar qualquer imagem ou código. O plano do jogo está em `PLANO.md`.
+Este arquivo vale para qualquer agente que mexa neste repositório. Ele substitui as skills, ferramentas e
+memória que você não tem: tudo o que precisa saber está aqui ou nos arquivos que ele manda ler.
+**Trabalho que não segue estas regras é recusado no PR, mesmo que funcione.**
+
+## 0. Antes de começar qualquer tarefa (obrigatório)
+
+**Leia, nesta ordem, inteiros, no início de toda tarefa** (não confie no que lembra de uma sessão antiga):
+1. Este `AGENTS.md`.
+2. `PLANO.md`: o jogo, a fase atual e o que fica para depois.
+3. Conforme a tarefa:
+   - **imagem/asset:** `prompts/lista-de-imagens.md`, `prompts/asset.md` (ou `asset-masmorra.md`) e a seção 9;
+   - **código:** a seção 8 e os arquivos que você vai mudar, inteiros.
+
+`docs/PLANO-versao-do-amigo.md` é só ideia antiga: onde contradiz o `PLANO.md` (por exemplo, Phaser),
+vale o `PLANO.md`.
+
+**Como trabalhar:**
+1. **Uma tarefa por vez, pequena.** Se o pedido for grande, escreva antes um plano curto (o que muda,
+   quais arquivos, como vai provar que funciona) e mostre ao dono do pedido antes de fazer.
+2. **Branch e PR, nunca direto na `main`.** Branch `feat/<assunto>` ou `fix/<assunto>`. Um PR por
+   assunto. Commits pequenos, com mensagem em português dizendo o que mudou.
+3. **Não invente.** Se algo não está decidido no `PLANO.md` ou aqui (tamanho, cor nova, mecânica nova,
+   biblioteca nova), **pergunte** em vez de escolher sozinho. Número fixo (resolução, grade, paleta) não se
+   muda sem aprovação de Henrique e Raffel.
+4. **Nada de gambiarra:** sem código morto, sem "TODO depois", sem arquivo `.md` explicando um atalho, sem
+   desligar checagem, sem editar `check_art.py`, `verificar.py` ou as paletas para "passar". Corrija a causa.
+5. **Assets do jogo ficam em `assets/`** (o Godot só importa `assets/` e `cenas/`; as outras pastas têm
+   `.gdignore`). Arte nova nasce em `art/` pelo fluxo da seção 4 e só depois é copiada para `assets/`.
+6. **Segredos nunca entram no git** (chaves de API, senhas, `.env`).
+
+**Definição de pronto. Só abra o PR quando tudo isto for verdade:**
+1. `python tools/verificar.py --captura` termina com **TUDO CERTO**. Ele confere a arte
+   (`check_art.py`), a configuração de pixel art do `project.godot` e roda o jogo procurando erro de
+   script. Se o Godot não for achado, defina a variável `GODOT` com o caminho do executável.
+2. **Você olhou o resultado de verdade**, não só leu o código: abriu `build/captura.png` (ou rodou o jogo
+   com F5) e conferiu que a mudança aparece e que nada quebrou em volta. Arte: abriu o `.preview8x.png`
+   e comparou com `art/referencia/vila-aprovada.jpg`.
+3. Testou o caminho que mudou: andou até lá, apertou a tecla, entrou na área. Se a mudança for de rede,
+   rodou com 2 clientes.
+4. A descrição do PR (o modelo em `.github/pull_request_template.md` aparece sozinho) diz: o que mudou,
+   como testar, a captura anexada e **o que não funcionou ou ficou de fora, com honestidade**. "Funciona"
+   sem prova não conta.
+
+**Se você errar a mesma coisa duas vezes**, a correção vira checagem automática em `tools/verificar.py`
+(ou num teste), não mais uma linha neste arquivo.
+
+## Arte e código: as regras do jogo
+
 A lista do que gerar, na ordem, está em `prompts/lista-de-imagens.md`.
 
 ## 1. Visual aprovado
@@ -68,6 +115,10 @@ pixel. Toda imagem passa por estes passos, sem pular nenhum:
    para `art/rejeitadas/` com o motivo no nome (`goblin-v1-angulo-lateral.png`) e gere de novo.
 7. Mostre ao Raffel/Henrique antes de seguir para o próximo item da lista.
 
+**Gerador de imagem:** use o que a sua IA tiver embutido (no Codex/ChatGPT, a geração de imagem nativa).
+Não use serviço pago (fal.ai, Higgsfield, Midjourney) sem pedido explícito. Salve sempre o prompt usado
+junto da imagem (`art/rascunho/<nome>.prompt.md`): sem prompt salvo, a imagem não é aceita.
+
 **Tiles de chão** (grama, pedra, lama) precisam emendar sem costura. Gere um bloco de 4×4 tiles
 (64×64 no jogo) pedindo textura contínua, converta com `--largura 64 --altura 64` e confira montando 3×3
 cópias lado a lado.
@@ -134,6 +185,11 @@ referência de cenário, como a vila aprovada.
 - **O servidor decide tudo:** dano, drop, XP, moedas e inventário são calculados só no servidor. O
   cliente manda comandos ("andar para", "usar poder 2") e mostra o resultado.
 - Teste a versão web cedo, num celular comum e num PC fraco.
+- **Estado atual:** `cenas/vila-lobby.tscn` é o lobby provisório. O chão é uma imagem única
+  (`assets/mapas/vila-lobby.png`, arte de IA fora da paleta) com colisões desenhadas à mão. Ele serve para
+  andar e testar; o mapa de verdade será montado com `TileMapLayer` e os tiles da lista de imagens.
+- Nomes de cena, script e nó em português, sem acento. Tipagem estática no GDScript
+  (`var vida: int`, `func dano(valor: int) -> void`).
 - Erro repetido vira checagem (teste ou script), não mais uma linha neste arquivo.
 
 ## 9. Skills do Mr. Mak (workflow de assets)

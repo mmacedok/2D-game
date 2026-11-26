@@ -14,7 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="MiniMMO Pixel"
+config/name="Jogo 2D"
 run/main_scene="res://cenas/vila-lobby.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
@@ -30,5 +30,6 @@ window/stretch/scale_mode="integer"
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+2d/snap/snap_2d_transforms_to_pixel=true
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
